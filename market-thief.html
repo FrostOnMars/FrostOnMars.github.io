@@ -1,0 +1,679 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>The Market Thief</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one-screen terminal set into a dark oak "stall" frame, quest log strip on top. Single deliberate dark look. */
+:root{
+  --oak:#1b1410;        /* page ground, dark wood */
+  --screen:#120f0c;     /* terminal glass */
+  --ink:#e9dcc0;        /* parchment-colored text */
+  --dim:#9c8c70;        /* quiet text */
+  --amber:#f2b544;      /* commands & prompt */
+  --moss:#8fc28a;       /* hints / success */
+  --rust:#e07a5f;       /* errors */
+  --edge:#3a2c20;       /* frame lines */
+  --display:"IM Fell English SC", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+  color-scheme: dark;
+}
+html,body{height:100%}
+body{
+  background:var(--oak); color:var(--ink); font-family:var(--mono);
+  height:100dvh; /* follows the on-screen keyboard on phones */
+  touch-action:manipulation; /* no accidental double-tap zoom */
+  display:flex; flex-direction:column;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));
+  padding-right:max(16px, env(safe-area-inset-right, 0px));
+  padding-block:12px; box-sizing:border-box;
+}
+header{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:6px 16px; padding-bottom:10px}
+h1{font-family:var(--display); font-weight:400; font-size:clamp(1.4rem,4.5vw,2rem); margin:0; color:var(--amber); letter-spacing:.02em; text-wrap:balance}
+.log{display:flex; gap:12px; flex-wrap:wrap; font-size:.78rem; color:var(--dim)}
+.log b{color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums}
+.pips{display:inline-flex; gap:3px; vertical-align:middle; margin-left:4px}
+.pips i{width:9px; height:9px; border:1px solid var(--amber); transform:rotate(45deg); display:inline-block}
+.pips i.on{background:var(--amber)}
+.frame{
+  flex:1; min-height:0; display:flex; flex-direction:column;
+  border:1px solid var(--edge); border-radius:6px; background:var(--screen);
+  box-shadow: inset 0 0 40px rgba(0,0,0,.6);
+}
+#out{flex:1; min-height:0; overflow-y:auto; padding:14px 14px 4px; font-size:clamp(.82rem,2.6vw,.95rem); line-height:1.55; overflow-wrap:anywhere}
+#out > div{white-space:pre-wrap; max-width:72ch; margin:0 0 6px}
+.cmd{color:var(--ink); margin-top:16px} .cmd .p{color:var(--amber)}
+#out > div:first-child{margin-top:0}
+.err{color:var(--rust)}
+.hint{color:var(--moss)}
+.dir{color:#7fb2e8; font-weight:600}
+.dim{color:var(--dim)}
+.story{color:var(--ink)}
+.title{font-family:var(--display); color:var(--amber); font-size:1.3em}
+code{color:var(--amber); background:rgba(242,181,68,.1); padding:0 4px; border-radius:3px; font-family:var(--mono); cursor:pointer}
+.win{color:var(--amber); font-weight:600}
+.keys{display:flex; gap:8px; flex-wrap:wrap; padding:8px 14px 0; border-top:1px dashed var(--edge)}
+.keys button{font-family:var(--mono); font-size:.8rem; color:var(--amber); background:rgba(242,181,68,.08); border:1px solid var(--edge); border-radius:4px; padding:6px 12px; min-height:34px; cursor:pointer; -webkit-tap-highlight-color:transparent}
+.keys button:active{background:rgba(242,181,68,.25)}
+form{display:flex; align-items:center; gap:8px; padding:8px 14px 12px}
+#prompt{color:var(--amber); white-space:nowrap; font-size:clamp(.82rem,2.6vw,.95rem)}
+#cmd{flex:1; min-width:0; background:transparent; border:0; outline:none; color:var(--ink); font:inherit; font-size:16px; caret-color:var(--amber)}
+form:focus-within{background:rgba(242,181,68,.04)}
+.foot{font-size:.72rem; color:var(--dim); padding-top:8px}
+@media (prefers-reduced-motion:no-preference){ #out > div.new{animation:in .25s ease-out} @keyframes in{from{opacity:.3}to{opacity:1}} }
+</style>
+
+<header>
+  <h1>The Market Thief</h1>
+  <div class="log">
+    <span>Clues <b id="clues">0/7</b><span class="pips" id="pips"></span></span>
+    <span>Commands used <b id="learned">0/8</b></span>
+  </div>
+</header>
+
+<div class="frame" id="frame">
+  <div id="out" aria-live="polite"></div>
+  <div class="keys" id="keys" aria-label="Quick keys">
+    <button type="button" data-k="tab" title="Finish the name, like the Tab key">⇥ Tab</button>
+    <button type="button" data-k="up" title="Bring back your last command, like the ↑ key">↑</button>
+    <button type="button" data-k="run" data-cmd="ls">ls</button>
+    <button type="button" data-k="run" data-cmd="cd ..">cd ..</button>
+    <button type="button" data-k="run" data-cmd="hint">hint</button>
+  </div>
+  <form id="f" autocomplete="off">
+    <label id="prompt" for="cmd">squire@market:~$</label>
+    <input id="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Type a command">
+  </form>
+</div>
+<div class="foot">Tip: <b>Tab</b> (or the <b>⇥</b> button) finishes a name, <b>↑</b> brings back your last command, and tapping any golden command types it for you. Tab and ↑ work in a real terminal too.</div>
+
+<script>
+// ---------- The market, built like a real Linux folder tree ----------
+const F = (text, clue) => ({type:'file', text, clue});
+const D = (children) => ({type:'dir', children});
+
+const FS = D({
+  'welcome.txt': F(
+`Welcome, young SQUIRE! (A squire is a helper who is training to become a knight.)
+
+You are standing in the middle of the busy MARKET SQUARE. Merchants
+(people who sell things) shout about bread, apples, and horseshoes.
+
+Something terrible has happened. Read the wanted poster to find out what.
+
+Type:  \`cat wanted_poster.txt\``),
+  'wanted_poster.txt': F(
+`=========  WANTED  =========
+  The King's SILVER GOBLET
+  has been STOLEN!
+
+(A goblet is a fancy cup with a long stem.)
+
+A THIEF in a GREEN HOOD snatched it this morning.
+The baker opens her shop before sunrise and sees everyone.
+Start your search at the BAKERY.
+
+Reward: a real knight's sword.
+============================
+
+Rooms here are called DIRECTORIES. To walk into one, use cd.
+Type:  \`cd bakery\``, 1),
+
+  bakery: D({
+    'baker_hilda.txt': F(
+`Hilda the Baker wipes flour off her hands.
+
+"A green hood? Yes! Someone in a green hood bumped my table
+and ran off with a loaf AND something shiny under their cloak.
+They ran toward the sound of the hammer. Hear that CLANG! CLANG!?
+That's the BLACKSMITH."
+
+To go back out to the square, type  \`cd ..\`
+(Two dots mean "the room I came from.")
+Then try  \`cd blacksmith\``, 2),
+    'fresh_bread.txt': F(
+`Warm, crusty loaves sit in neat rows. It smells wonderful.
+One loaf is missing. Somebody was hungry... and sneaky.`)
+  }),
+
+  blacksmith: D({
+    'smith_bram.txt': F(
+`Bram the Blacksmith stops hammering. Sparks fly from his ANVIL.
+(An anvil is a heavy iron block for hammering metal on.)
+
+"Green hood, you say? Ran right past my forge,
+heading for the horses. Try the STABLES. I swear I heard a ruckus back there!"
+
+Go back with  \`cd ..\`  and then  \`cd stables\`
+Or do it in one step:  \`cd ../stables\``, 3),
+    'anvil.txt': F(
+`A big black anvil. It is too heavy to lift, even for a knight.`)
+  }),
+
+  fruit_stall: D({
+    'farmhand_tilly.txt': F(
+`Tilly the Farmhand is stacking watermelons bigger than your head.
+
+"Looking for Farmer Odo? You JUST missed him! Selling melons all
+morning made him thirsty, so he's taking a break at the TAVERN."
+
+Go find him:  \`cd ..\`  then  \`cd tavern\``, 4),
+    'apples.txt': F(
+`Red apples, green apples, and one very wormy apple. Yuck.`),
+    'watermelons.txt': F(
+`A mountain of fat green watermelons. One of them has a big bite
+taken right out of it. A sneaky, thief-sized bite. Hmm...`)
+  }),
+
+  tavern: D({
+    'barkeep_mags.txt': F(
+`Mags the Barkeep polishes a mug. (A TAVERN is an inn where
+travelers eat, drink, and rest.)
+
+"No green hoods in here today, love. But if you're after Farmer
+Odo, he's in the corner booth resting his feet.
+And don't go poking about in my cellar!"`),
+    'farmer_odo.txt': F(
+`Farmer Odo sips cider in the corner booth, boots up on a stool.
+
+"The barn? Aye, I locked it — can't have strangers spooking my
+horses. Wait... a THIEF might be hiding in there?! Then hurry,
+take my IRON KEY! It's right there on the table.
+
+A good squire keeps treasures in a BAG. In Linux, a bag is just
+a directory that you make yourself!"
+
+Step 1 - make your bag:     \`mkdir ~/inventory\`
+Step 2 - pick up the key:   \`mv iron_key ~/inventory\`
+         (mv means MoVe: it moves a file into a directory)
+Step 3 - peek in your bag:  \`ls ~/inventory\`
+
+Then march to the barn:  \`cd ~/stables\``, 5),
+    'iron_key': F(
+`A heavy iron key, cold and a little rusty. It must open the
+big barn doors at the STABLES.
+
+Pick it up with:  \`mv iron_key ~/inventory\`
+(No bag yet? Make one first:  \`mkdir ~/inventory\`)`),
+    cellar: D({
+      'barrels.txt': F(
+`It's dark and cool down here. Just barrels of apple cider.
+No thief here. Lost? Type \`pwd\` to see where you are.
+Type \`cd ~\` to zoom all the way home to the market square.`)
+    })
+  }),
+
+  stables: D({
+    'stablehand_pip.txt': F(
+`Pip the Stablehand looks worried.
+
+"The horses are jumpy! They keep looking UP at the HAYLOFT.
+That's that room high up under the roof where we keep the hay.
+I think someone is up there!"
+
+Type  \`ls\`  to look for the way up.`, 6),
+    'horse.txt': F(
+`A brown horse named Biscuit snorts and stares at the ceiling.`),
+    hayloft: D({
+      'hay.txt': F(
+`Piles and piles of hay. It looks like nobody is here...
+
+But wait. The hay just MOVED.
+
+Sneaky things like to HIDE. In Linux, hidden files have names
+that start with a dot, like .secret
+Plain ls won't show them. You need to ask for ALL files.
+
+Type:  \`ls -a\``, 7),
+      '.thief': F('', 'win')
+    })
+  })
+});
+
+// ---------- State ----------
+const HOME = [];
+let cwd = [];
+let clues = new Set();
+let used = new Set();
+let history = [], hIdx = 0;
+let won = false;
+let visited = new Set();
+let stuck = 0;
+let unlocked = false;   // the barn doors at the stables
+let sawLocked = false;  // player has bumped into the locked doors
+const TRACK = ['ls','cd','cat','pwd','mkdir','mv','help','clear'];
+
+const out = document.getElementById('out');
+const input = document.getElementById('cmd');
+const promptEl = document.getElementById('prompt');
+
+// ---------- Helpers ----------
+function pathStr(p){ return p.length ? '~/' + p.join('/') : '~'; }
+function nodeAt(p){ let n = FS; for(const s of p){ if(!n.children||!n.children[s]) return null; n = n.children[s]; } return n; }
+function resolve(arg){
+  let parts = arg.startsWith('~') ? [] : [...cwd];
+  let rest = arg.replace(/^~\/?/, '').replace(/^\//, '');
+  if(arg.startsWith('/')) { return {err:'outside'}; }
+  for(const s of rest.split('/')){
+    if(s===''||s==='.') continue;
+    if(s==='..'){ if(parts.length) parts.pop(); else return {err:'outside'}; continue; }
+    parts.push(s);
+  }
+  return {parts, node: nodeAt(parts)};
+}
+function print(text, cls='story'){
+  if(cls==='err'){ stuck++; if(stuck>=3){ stuck=0; setTimeout(()=>print('Feeling stuck? Type `hint` and I will point you the right way.','hint'),0); } }
+  else if(cls==='story'||cls==='dim'||cls==='win'){ stuck=0; }
+  const d = document.createElement('div');
+  d.className = cls + ' new';
+  // turn `backticks` into highlighted command chips
+  text.split(/`([^`]+)`/).forEach((chunk,i)=>{
+    if(i%2){ const c=document.createElement('code'); c.textContent=chunk; c.title='Tap to type this';
+      c.addEventListener('click', ev=>{ ev.stopPropagation(); input.value=chunk; input.focus(); });
+      d.appendChild(c); }
+    else d.appendChild(document.createTextNode(chunk));
+  });
+  out.appendChild(d);
+  setTimeout(()=>d.classList.remove('new'),300);
+  out.scrollTop = out.scrollHeight;
+}
+function printNodes(nodes){
+  const d = document.createElement('div');
+  nodes.forEach((n,i)=>{
+    const s=document.createElement('span'); s.className=n.cls; s.textContent=n.t;
+    if(n.t!=='.' && n.t!=='..'){
+      s.style.cursor='pointer'; s.title='Tap to type this name';
+      s.addEventListener('click', ev=>{
+        ev.stopPropagation();
+        const name = n.t.replace(/\/$/,'');
+        if(!input.value.trim()) input.value = (n.cls==='dir' ? 'cd ' : 'cat ') + name;
+        else input.value = input.value.replace(/\s+$/,'') + ' ' + name;
+        input.focus();
+      });
+    }
+    d.appendChild(s); if(i<nodes.length-1) d.appendChild(document.createTextNode('   '));
+  });
+  out.appendChild(d); out.scrollTop = out.scrollHeight;
+}
+function updateLog(){
+  document.getElementById('clues').textContent = clues.size + '/7';
+  document.getElementById('learned').textContent = [...used].filter(c=>TRACK.includes(c)).length + '/8';
+  const pips = document.getElementById('pips'); pips.innerHTML='';
+  for(let i=1;i<=7;i++){ const e=document.createElement('i'); if(clues.has(i)) e.className='on'; pips.appendChild(e); }
+  promptEl.textContent = 'squire@market:' + pathStr(cwd) + '$';
+}
+
+// ---------- Room flavor ----------
+const FLAVOR = {
+  square:{
+    first:`You stand in the heart of the MARKET SQUARE. Carts rattle over the
+cobblestones, a juggler drops his pins, pigeons scatter, and merchants
+shout about bread, apples, and horseshoes. Somewhere out there, a thief
+in a green hood is hiding with the King's goblet.`,
+    back:'You weave through the crowd, back in the busy MARKET SQUARE.',
+    nudge:'Look around with `ls`.'},
+  bakery:{
+    first:`You step into the BAKERY. Warm air hugs you like a blanket, and the
+smell of fresh bread makes your tummy growl. Flour dusts the floor
+like snow — and wait... are those floury FOOTPRINTS running out the door?`,
+    back:'Back in the warm bakery. Hilda gives you a floury wave.',
+    nudge:'Someone in here may have seen the thief. Type `ls` to see who is around.'},
+  blacksmith:{
+    first:`You duck into the BLACKSMITH's shop. CLANG! CLANG! Sparks leap like
+tiny orange fireflies, and the air is hot enough to toast bread.
+Swords and horseshoes glitter on the walls in the firelight.`,
+    back:'Back in the hot, noisy blacksmith\'s shop. CLANG! CLANG!',
+    nudge:'Type `ls` to see who is here.'},
+  fruit_stall:{
+    first:`You reach the FRUIT STALL. Apples are stacked in wobbly red-and-green
+pyramids, and watermelons sit in a pile like sleeping cannonballs.
+Tilly the Farmhand is heaving them about, puffing and sweating.`,
+    back:'Back at the fruit stall. Tilly waves between watermelon lifts.',
+    nudge:'Type `ls` to see who is here.'},
+  tavern:{
+    first:`You push open the creaky TAVERN door. Inside it is dim and cozy:
+a crackling fire, long wooden tables, and the clink of heavy mugs.
+In the corner booth, a farmer with muddy boots sips a mug of cider.`,
+    back:'Back in the cozy tavern. The fire pops and crackles.',
+    nudge:'Type `ls` to see who is here.'},
+  cellar:{
+    first:`You creep down the stone steps into the dark CELLAR (a room under
+the ground). It is cool and quiet, and your footsteps echo. Big round
+barrels line the walls like a row of sleeping giants.`,
+    back:'Down in the dark, echoey cellar again. Drip... drip...',
+    nudge:'Type `ls` to look around.'},
+  stables:{
+    first:`You walk into the STABLES. It smells of hay and horses. Hooves stamp,
+tails swish — and every single horse is staring nervously at the
+ceiling. Something up there has spooked them.`,
+    back:'Back in the stables. The horses are STILL staring at the ceiling.',
+    nudge:'Type `ls` to see who is here.'},
+  hayloft:{
+    first:`You climb the wooden ladder up, up, up into the HAYLOFT. Golden dust
+floats in the sunbeams, and hay is piled higher than your head.
+It is very quiet up here... almost TOO quiet. Was that a tiny sneeze?`,
+    back:'Up in the dusty hayloft again. Something rustles in the hay.',
+    nudge:'Search the hay: type `ls` to look around.'},
+  inventory:{
+    first:`You open the flap of your INVENTORY bag and peek inside. It smells
+of new leather. Anything you \`mv\` in here goes with you everywhere.`,
+    back:'You rummage around inside your inventory bag.',
+    nudge:'Type `ls` to see what you are carrying, and `cd ~` to climb back out.'}
+};
+function enterRoom(){
+  updateLog();
+  const here = cwd[cwd.length-1] || 'square';
+  const f = FLAVOR[here] || {
+    first:`You step into ${here} — a brand-new place that YOU built with mkdir!`,
+    back:`Back inside ${here}.`,
+    nudge:'Type `ls` to look around.'};
+  const firstTime = !visited.has(here);
+  visited.add(here);
+  print(firstTime ? f.first : f.back, firstTime ? 'story' : 'dim');
+  if(!used.has('cd-taught')){ used.add('cd-taught'); print(`See how the prompt changed to ${pathStr(cwd)}? That shows where you are. Now type \`ls\` to look around.`,'hint'); }
+  else if(firstTime && f.nudge) print(f.nudge,'hint');
+}
+// ---------- The locked barn ----------
+function lockedPath(parts){ return !unlocked && parts && parts[0]==='stables'; }
+function findKey(node=FS, path=[]){
+  for(const n of Object.keys(node.children||{})){
+    const c = node.children[n];
+    if(n==='iron_key' && c.type==='file') return path.concat(n);
+    if(c.type==='dir'){ const r = findKey(c, path.concat(n)); if(r) return r; }
+  }
+  return null;
+}
+function tryUnlock(){
+  const inv = FS.children['inventory'];
+  if(inv && inv.type==='dir' && inv.children['iron_key']){
+    unlocked = true;
+    print(`You pull the heavy IRON KEY out of your inventory bag and slide it
+into the lock. CLUNK! The big barn doors creak open.`,'story');
+    return true;
+  }
+  sawLocked = true;
+  if(!clues.has(5)){
+    print(`The big BARN DOORS are locked tight. A wooden sign hangs on the handle:
+
+   "Gone to sell watermelons at the FRUIT STALL.
+    Back later!              — Farmer Odo"`,'story');
+    print('Farmer Odo must have the key. Find him: type `cd ~` then `cd fruit_stall`','hint');
+  } else {
+    print('You rattle the handle, but the big barn doors are still LOCKED tight.','story');
+    print('You need the IRON KEY inside your inventory bag. Type `hint` if you forget the steps.','hint');
+  }
+  return false;
+}
+
+// ---------- Commands ----------
+const CMDS = {
+  help(){
+    print(
+`Here are the magic words you can type. Press Enter after each one.
+
+  \`ls\`          LiSt what is in this room (files and doorways)
+  \`ls -a\`       list ALL things, even hidden ones
+  \`cd bakery\`   Change Directory: walk into a room called bakery
+  \`cd ..\`       go back to the room you came from
+  \`cd ~\`        go all the way home to the market square
+  \`cat name\`    read a scroll (a file) out loud
+  \`mkdir name\`  MaKe a DIRectory: build a new room or bag
+  \`mv a b\`      MoVe file a into directory b (pick things up!)
+  \`pwd\`         Print Working Directory: "where am I?"
+  \`hint\`        a friendly nudge if you don't know what to do next
+  \`clear\`       wipe the screen clean
+  \`help\`        show this list again
+
+Spelling matters, and so do CAPITAL letters. Bakery and bakery are different!`,'hint');
+  },
+  ls(args){
+    const all = args.includes('-a') || args.includes('-la') || args.includes('-al');
+    const target = args.find(a=>!a.startsWith('-'));
+    let node = nodeAt(cwd);
+    if(target){ const r=resolve(target); if(r.err||!r.node){ print(`ls: cannot access '${target}': No such file or directory`,'err'); return; } if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot peek inside.','story'); return; } node=r.node; if(node.type==='file'){ print(target,'story'); return; } }
+    let names = Object.keys(node.children).sort();
+    if(!all) names = names.filter(n=>!n.startsWith('.'));
+    const items = (all?[{t:'.',cls:'dir'},{t:'..',cls:'dir'}]:[]).concat(
+      names.map(n=>({t: node.children[n].type==='dir'? n+'/' : n, cls: node.children[n].type==='dir'?'dir':(n.startsWith('.')?'win':'story')})));
+    if(!items.length){ print('(nothing here)','dim'); return; }
+    printNodes(items);
+    if(!used.has('ls-taught')){ used.add('ls-taught'); print(`Blue names ending in / are DIRECTORIES (rooms). Others are FILES (scrolls) you can read with cat.`,'hint'); }
+    if(all && cwd.join('/')==='stables/hayloft' && !won){ print(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief:  \`cat .thief\``,'hint'); }
+  },
+  cd(args){
+    const arg = args[0];
+    if(!arg || arg==='~'){ cwd=[]; enterRoom(); return; }
+    const r = resolve(arg);
+    if(r.err==='outside'){ print(`The city guards block the way. "The market is that way, squire!"\nThere is nothing outside the market in this game. Try \`cd ~\``,'err'); return; }
+    if(!r.node){ print(`bash: cd: ${arg}: No such file or directory`,'err'); suggest(arg); return; }
+    if(r.node.type==='file'){ print(`bash: cd: ${arg}: Not a directory\nThat's a scroll, not a room. Read it with \`cat ${arg}\``,'err'); return; }
+    if(lockedPath(r.parts) && !tryUnlock()) return;
+    cwd = r.parts; enterRoom();
+  },
+  cat(args){
+    if(!args.length){ print('cat needs to know which scroll to read. Example: `cat welcome.txt`','err'); return; }
+    for(const a of args){
+      const r = resolve(a);
+      if(r.err||!r.node){ print(`cat: ${a}: No such file or directory`,'err'); suggest(a); continue; }
+      if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); continue; }
+      if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
+      if(r.node.clue==='win'){ winGame(); continue; }
+      print(r.node.text,'story');
+      if(typeof r.node.clue==='number' && !clues.has(r.node.clue)){ clues.add(r.node.clue); updateLog(); print(`✦ Clue found! (${clues.size} of 7)`,'hint'); }
+    }
+  },
+  hint(){
+    if(won){ print('You already caught the thief! Type `restart` to play again.','hint'); return; }
+    const here = cwd.join('/');
+    if(!clues.has(1)){
+      if(here==='') print('Read the wanted poster to begin your quest: type `cat wanted_poster.txt`','hint');
+      else print('Head back home first: type `cd ~`\nThen read the poster: `cat wanted_poster.txt`','hint');
+    } else if(!clues.has(2)){
+      if(here==='bakery') print('Hilda the baker sees everyone. Talk to her: type `cat baker_hilda.txt`','hint');
+      else print('The poster said to start at the BAKERY.\nType `cd ~` to go home, then `cd bakery`','hint');
+    } else if(!clues.has(3)){
+      if(here==='blacksmith') print('Ask the blacksmith what he saw: type `cat smith_bram.txt`','hint');
+      else print('Hilda heard the thief run toward the hammering. CLANG! CLANG!\nType `cd ~` then `cd blacksmith`','hint');
+    } else if(!unlocked){
+      const inv = FS.children['inventory'];
+      const hasKey = inv && inv.type==='dir' && inv.children['iron_key'];
+      if(hasKey) print('You have the key in your bag! Open the barn: type `cd ~/stables`','hint');
+      else if(clues.has(5)){
+        if(!inv || inv.type!=='dir') print('Farmer Odo told you the plan! First make your bag:\ntype `mkdir ~/inventory`','hint');
+        else {
+          const kp = findKey();
+          if(kp && kp.length===1) print('The iron key is lying at home in the square! Put it in your bag:\ntype `cd ~` then `mv iron_key ~/inventory`','hint');
+          else if(kp) print(`The iron key is in the ${kp.slice(0,-1).join('/')}. Go there, then type:\n\`mv iron_key ~/inventory\``,'hint');
+          else print('Pick up the key at the tavern: type `cd ~/tavern` then `mv iron_key ~/inventory`','hint');
+        }
+      }
+      else if(clues.has(4)){
+        if(here==='tavern') print('Farmer Odo is in the corner booth. Talk to him: type `cat farmer_odo.txt`','hint');
+        else print('Farmer Odo is taking a break at the TAVERN.\nType `cd ~` then `cd tavern`','hint');
+      }
+      else if(sawLocked){
+        if(here==='fruit_stall') print('Ask the farmhand where Odo went: type `cat farmhand_tilly.txt`','hint');
+        else print('The sign said Farmer Odo went to the FRUIT STALL.\nType `cd ~` then `cd fruit_stall`','hint');
+      }
+      else print('Bram saw the thief run toward the horses.\nType `cd ~` then `cd stables`','hint');
+    } else if(!clues.has(6)){
+      if(here==='stables') print('The stablehand looks worried. Ask him: type `cat stablehand_pip.txt`','hint');
+      else print('Back to the barn! Type `cd ~/stables`','hint');
+    } else if(!clues.has(7)){
+      if(here==='stables/hayloft') print('Take a close look at the hay: type `cat hay.txt`','hint');
+      else if(here==='stables') print('The horses keep looking UP. Climb up: type `cd hayloft`','hint');
+      else print('Someone is hiding above the stables!\nType `cd ~/stables` then `cd hayloft`','hint');
+    } else {
+      if(here==='stables/hayloft') print('Hidden files start with a dot, and plain `ls` will not show them.\nType `ls -a` to see EVERYTHING, then read what you find with `cat`','hint');
+      else print('Hurry back to the hayloft! Type `cd ~/stables/hayloft`\nThen type `ls -a` to find what is hiding.','hint');
+    }
+  },
+  mkdir(args){
+    if(!args.length){ print('mkdir needs a name for the new directory.\nExample: `mkdir ~/inventory` makes a bag at home called inventory.','err'); return; }
+    for(const a of args){
+      if(a.startsWith('-')) continue;
+      const r = resolve(a);
+      if(r.err==='outside'){ print('The city guards frown. "No building outside the market, squire!"','err'); continue; }
+      if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot build in there.','story'); continue; }
+      if(r.node){ print(`mkdir: cannot create directory '${a}': File exists`,'err'); continue; }
+      const name = r.parts[r.parts.length-1];
+      const parent = nodeAt(r.parts.slice(0,-1));
+      if(!parent || parent.type!=='dir'){ print(`mkdir: cannot create directory '${a}': No such file or directory`,'err'); continue; }
+      parent.children[name] = D({});
+      if(name==='inventory' && r.parts.length===1){
+        print(`You stitch together a sturdy leather INVENTORY bag and hang it
+from your belt. (You just made a brand-new directory at home!)`,'story');
+        print('Now you can `mv` things into it, like this: `mv iron_key ~/inventory`','hint');
+      } else {
+        print(`You build a brand-new directory called ${name}. (mkdir = MaKe DIRectory)`,'story');
+      }
+    }
+  },
+  mv(args){
+    if(args.length<2){ print('mv needs two parts: the thing to move, then where it goes.\nExample: `mv iron_key ~/inventory`','err'); return; }
+    const src = resolve(args[0]);
+    if(src.err || !src.node){ print(`mv: cannot stat '${args[0]}': No such file or directory`,'err'); suggest(args[0]); return; }
+    if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
+    if(src.node.type==='dir'){ print(`mv: '${args[0]}' is a whole room! A squire can only carry files, not rooms.`,'err'); return; }
+    const dst = resolve(args[1]);
+    if(dst.err || !dst.node){ print(`mv: cannot move to '${args[1]}': No such file or directory\nIs there a bag or room with that name? Make one with \`mkdir ${args[1]}\``,'err'); return; }
+    if(lockedPath(dst.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot put things inside.','story'); return; }
+    if(dst.node.type!=='dir'){ print(`mv: '${args[1]}' is a file, not a directory.\nYou can only put things INSIDE a directory (a room or a bag).`,'err'); return; }
+    const name = src.parts[src.parts.length-1];
+    const parent = nodeAt(src.parts.slice(0,-1));
+    delete parent.children[name];
+    dst.node.children[name] = src.node;
+    print(`You pick up ${name} and tuck it into ${args[1].replace(/\/+$/,'')}.`,'story');
+    if(name==='iron_key' && dst.parts.length===1 && dst.parts[0]==='inventory'){
+      print('The IRON KEY jingles safely in your bag. To the barn! Type `cd ~/stables`','hint');
+    }
+  },
+  cp(args){
+    if(args.length<2){ print('cp needs two parts: the thing to copy, then where the copy goes.\nExample: `cp apples.txt ~/inventory`','err'); return; }
+    const src = resolve(args[0]);
+    if(src.err || !src.node){ print(`cp: cannot stat '${args[0]}': No such file or directory`,'err'); suggest(args[0]); return; }
+    if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
+    if(src.node.type==='dir'){ print(`cp: '${args[0]}' is a directory. In this game you can only copy files.`,'err'); return; }
+    const dst = resolve(args[1]);
+    if(dst.err || !dst.node || dst.node.type!=='dir' || lockedPath(dst.parts)){ print(`cp: cannot copy to '${args[1]}': No such directory`,'err'); return; }
+    const name = src.parts[src.parts.length-1];
+    dst.node.children[name] = {type:'file', text:src.node.text};
+    print(`You make a perfect copy of ${name}. Now there are two! (Bonus command: cp means CoPy.)`,'story');
+  },
+  touch(args){
+    if(!args.length){ print('touch needs a name. Example: `touch note.txt` makes a new empty scroll.','err'); return; }
+    for(const a of args){
+      const r = resolve(a);
+      if(r.err || lockedPath(r.parts)){ print(`touch: cannot touch '${a}'`,'err'); continue; }
+      if(r.node) continue; // real touch just updates the time — nothing to show here
+      const parent = nodeAt(r.parts.slice(0,-1));
+      if(!parent || parent.type!=='dir'){ print(`touch: cannot touch '${a}': No such file or directory`,'err'); continue; }
+      parent.children[r.parts[r.parts.length-1]] = F('(a blank scroll — you made it yourself with touch!)');
+      print(`You unroll a fresh blank scroll called ${r.parts[r.parts.length-1]}. (Bonus command: touch makes new empty files.)`,'story');
+    }
+  },
+  rm(){ print('Whoa there, squire! rm REMOVES things FOREVER — far too dangerous\nfor today\'s quest. Nothing in this market may be destroyed.\n(In a real terminal, be VERY careful with rm.)','hint'); },
+  pwd(){ print('/home/squire/market' + (cwd.length? '/'+cwd.join('/') : ''),'story');
+    if(!used.has('pwd-taught')){ used.add('pwd-taught'); print('That is your full address, like a map pin. Each / is a door between rooms.','hint'); } },
+  clear(){ out.innerHTML=''; },
+  restart(){ location.reload(); },
+  whoami(){ print('squire','story'); print('(Bonus command! whoami tells you your user name.)','hint'); },
+  sudo(){ print('Nice try! sudo means "do this as the boss." Even squires must ask the King first.','hint'); },
+  exit(){ print('A true squire never quits a quest! (In a real terminal, exit closes the window.)','hint'); }
+};
+
+function suggest(arg){
+  const node = nodeAt(cwd);
+  const names = Object.keys(node.children).filter(n=>!n.startsWith('.'));
+  const low = arg.toLowerCase().replace(/\/$/,'');
+  const hit = names.find(n=>n.toLowerCase()===low) || names.find(n=>n.toLowerCase().startsWith(low.slice(0,3)));
+  if(hit) print(`Did you mean ${hit}? Check the spelling and the capital letters. Type \`ls\` to see what's here.`,'hint');
+  else print('Type `ls` to see what is in this room.','hint');
+}
+
+function winGame(){
+  won = true;
+  print(
+`You pull back the hay...
+
+There, curled up with a loaf of bread, is a skinny kid in a
+GREEN HOOD, holding the King's SILVER GOBLET!
+
+"Aw, rats," says Wren the Pickpocket. "Nobody EVER finds the
+hidden files."
+
+Wren hands back the goblet and promises to work at the bakery
+to pay Hilda back for the bread.`,'story');
+  print('★  QUEST COMPLETE!  You caught the Market Thief!  ★','win');
+  print(
+`You used real Linux commands to solve this quest:
+  ls, ls -a, cd, cat, pwd, mkdir, and mv.
+They work the exact same way in a real terminal.
+
+Type \`restart\` to play again.`,'hint');
+}
+
+// ---------- Input handling ----------
+document.getElementById('f').addEventListener('submit', e=>{
+  e.preventDefault();
+  const raw = input.value; input.value='';
+  const line = raw.trim();
+  const echo = document.createElement('div'); echo.className='cmd';
+  const p = document.createElement('span'); p.className='p'; p.textContent = promptEl.textContent + ' ';
+  echo.appendChild(p); echo.appendChild(document.createTextNode(raw)); out.appendChild(echo);
+  if(!line){ out.scrollTop=out.scrollHeight; return; }
+  history.push(line); hIdx = history.length;
+  const [c, ...args] = line.split(/\s+/);
+  if(CMDS[c]){ used.add(c); CMDS[c](args); updateLog(); }
+  else if(c==='cd..' || c==='cd~'){ print(`Almost! Put a space after cd, like this:  \`${c.slice(0,2)} ${c.slice(2)}\``,'hint'); }
+  else if(c==='ls-a' || c==='ls-la' || c==='ls-al'){ print('Almost! Put a space after ls, like this:  `ls -a`','hint'); }
+  else if(CMDS[c.toLowerCase()]) print(`bash: ${c}: command not found\nCommands are lowercase. Try \`${c.toLowerCase()}\``,'err');
+  else print(`bash: ${c}: command not found\nType \`help\` to see the commands you can use.`,'err');
+  out.scrollTop = out.scrollHeight;
+});
+
+function histPrev(){ if(hIdx>0){ hIdx--; input.value=history[hIdx]; } }
+function histNext(){ if(hIdx<history.length-1){ hIdx++; input.value=history[hIdx]; } else { hIdx=history.length; input.value=''; } }
+function tabComplete(){
+  const parts = input.value.split(' ');
+  const last = parts.pop();
+  if(parts.length===0){ const m = Object.keys(CMDS).filter(k=>k.startsWith(last)); if(m.length===1) input.value = m[0]+' '; return; }
+  const slash = last.lastIndexOf('/');
+  const base = slash>=0 ? last.slice(0,slash+1) : '';
+  const frag = slash>=0 ? last.slice(slash+1) : last;
+  const r = base ? resolve(base) : {node: nodeAt(cwd)};
+  if(!r.node || r.node.type!=='dir') return;
+  const m = Object.keys(r.node.children).filter(n=>n.startsWith(frag) && (frag.startsWith('.') || !n.startsWith('.')));
+  if(m.length===1){ const n=m[0]; const isDir=r.node.children[n].type==='dir'; parts.push(base+n+(isDir?'/':' ')); input.value=parts.join(' ').replace(/ $/, isDir?'':' '); }
+  else if(m.length>1){ printNodes(m.map(n=>({t:n,cls:r.node.children[n].type==='dir'?'dir':'story'}))); }
+}
+input.addEventListener('keydown', e=>{
+  if(e.key==='ArrowUp'){ histPrev(); e.preventDefault(); }
+  else if(e.key==='ArrowDown'){ histNext(); e.preventDefault(); }
+  else if(e.key==='Tab'){ e.preventDefault(); tabComplete(); }
+});
+const keysEl = document.getElementById('keys');
+keysEl.addEventListener('pointerdown', e=>{ if(e.target.closest('button')) e.preventDefault(); }); // keep the phone keyboard open
+keysEl.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.dataset.k==='tab') tabComplete();
+  else if(b.dataset.k==='up') histPrev();
+  else { input.value = b.dataset.cmd; document.getElementById('f').requestSubmit(); }
+  input.focus();
+});
+if(window.visualViewport){ visualViewport.addEventListener('resize', ()=>{ out.scrollTop = out.scrollHeight; }); }
+document.getElementById('frame').addEventListener('click', ()=>{ if(!window.getSelection().toString()) input.focus(); });
+
+// ---------- Start ----------
+print('⚔  THE MARKET THIEF  ⚔','title');
+print(
+`This game is played by TYPING commands, just like a real Linux terminal.
+Type a command on the line at the bottom, then press Enter.
+
+Let's start. Type  \`ls\`  (that's a little L and a little S) to look around.
+Don't know what to do next? Type  \`hint\`  for a nudge, or  \`help\`  for all commands.`,'hint');
+updateLog();
+input.focus();
+</script>
+
+</body></html>
