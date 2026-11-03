@@ -6,3 +6,11 @@ Teach Linux to kids by hunting down a thief in the market.
 **[▶ Play The Market Thief](https://frostonmars.github.io/market-thief.html)** — a terminal adventure for young squires.
 Learn real Linux commands (`ls`, `cd`, `cat`, `pwd`, `mkdir`, `mv`) by tracking a
 green-hooded thief through a medieval market. Works on desktop and mobile.
+
+## Quest reward
+
+Catching the thief adds `knights_sword` to `~/inventory`, alongside anything
+already in the bag. Read its description with `cat ~/inventory/knights_sword`.
+The reward lasts for the current game only; refreshing or restarting resets it.
+Future quests can include `knights_sword` as a default file in their starting
+`inventory` directory. No cross-quest saving is implemented yet.

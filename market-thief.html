@@ -103,8 +103,6 @@ But every explorer must first find their place on the map.`),
   The King's SILVER GOBLET
   has been STOLEN!
 
-(A goblet is a fancy cup with a long stem.)
-
 A THIEF in a GREEN HOOD snatched it this morning.
 The baker opens her shop before sunrise and sees everyone.
 Start your search at the BAKERY.
@@ -477,7 +475,7 @@ Read it: \`cat wanted_poster.txt\``,
         if(!used.has('welcome-read')){
           used.add('welcome-read');
           print(
-            'cat shows the words inside a file. Imagine a cat pawing open a scroll!',
+            '\`cat\` shows the words inside a file. Imagine a cat pawing open a scroll!',
             'hint'
           );
         }
@@ -560,6 +558,21 @@ from your belt. (You just made a brand-new directory at home!)`,'story');
         print('Now you can `mv` things into it, like this: `mv iron_key ~/inventory`','hint');
       } else {
         print(`You build a brand-new directory called ${name}. (mkdir = MaKe DIRectory)`,'story');
+        if(name==='inventory'){
+          print(
+`Uh oh! In this adventure, an inventory folder here stays here.
+Only the bag at home, \`~/inventory\`, travels with you.
+The ~ means home, so it works wherever you are.`,
+            'hint');
+          const homeBag = FS.children['inventory'];
+          if(!homeBag){
+            print("Let's make your travelling bag at home instead: `mkdir ~/inventory`",'hint');
+          } else if(homeBag.type==='dir'){
+            print('Your travelling bag is already at home! Peek inside: `ls ~/inventory`','hint');
+          } else {
+            print('There is a file called inventory at home, but a bag must be a directory. Move that file into another directory first, then make your bag: `mkdir ~/inventory`','hint');
+          }
+        }
       }
     }
   },
@@ -580,6 +593,10 @@ from your belt. (You just made a brand-new directory at home!)`,'story');
     print(`You pick up ${name} and tuck it into ${args[1].replace(/\/+$/,'')}.`,'story');
     if(name==='iron_key' && dst.parts.length===1 && dst.parts[0]==='inventory'){
       print('The IRON KEY jingles safely in your bag. To the barn! Type `cd ~/stables`','hint');
+    } else if(name==='iron_key' && dst.parts[dst.parts.length-1]==='inventory'){
+      print('Uh oh! That inventory folder stays here. Your travelling bag belongs at home, at ~/inventory.','hint');
+      if(!FS.children['inventory']) print('Make your travelling bag first: `mkdir ~/inventory`','hint');
+      print(`Then move the key into your travelling bag: \`mv ${pathStr(dst.parts)}/iron_key ~/inventory\``,'hint');
     }
   },
   cp(args){
@@ -608,26 +625,26 @@ from your belt. (You just made a brand-new directory at home!)`,'story');
   },
   rm(){ print('Whoa there, squire! rm REMOVES things FOREVER — far too dangerous\nfor today\'s quest. Nothing in this market may be destroyed.\n(In a real terminal, be VERY careful with rm.)','hint'); },
   pwd(){
+    const firstUse = !used.has('pwd-taught');
     print(
-      '/home/squire/market' + (cwd.length ? '/' + cwd.join('/') : ''),
+`The map shows your current location:
+
+/home/squire/market${cwd.length ? '/' + cwd.join('/') : ''}`,
       'story'
     );
 
-    if(!used.has('pwd-taught')){
+    if(firstUse){
       used.add('pwd-taught');
       print(
-`pwd shows your current folder's address.
-A folder is called a DIRECTORY. In our adventure, it is a place.`,
-        'hint'
+`In Linux, a location is called a DIRECTORY or FOLDER, which can hold other locations or things to interact with. You can use \`pwd\` to check your map.`,
+        'story'
       );
     }
 
-    if(cwd.length === 0 && !clues.has(1)){
+    if(firstUse || (cwd.length === 0 && !clues.has(1))){
       print(
-`Your map places you in the market square.
-What is nearby? Look around: \`ls\`
-That's a little L and a little S.`,
-        'hint'
+`What is nearby? Look around: \`ls\`. (That's a little L and a little S.)`,
+        'story'
       );
     }
   },
@@ -648,6 +665,20 @@ function suggest(arg){
 }
 
 function winGame(){
+  if(won){
+    print('You already caught the thief and earned your sword! Check your bag: `ls ~/inventory`','hint');
+    return;
+  }
+  if(!FS.children['inventory']) FS.children['inventory'] = D({});
+  const inventory = FS.children['inventory'];
+  if(inventory.type!=='dir'){
+    print('Your reward needs an inventory bag, but ~/inventory is a file. Move it into another directory with `mv inventory bakery`, then try reading the thief file again.','err');
+    return;
+  }
+  inventory.children['knights_sword'] = F(
+`A real knight's sword, awarded for catching the Market Thief.
+Its polished blade gleams, and your name is engraved on the hilt.
+A reminder to be brave, kind, and protect those who need your help.`);
   won = true;
   print(
 `You pull back the hay...
@@ -661,6 +692,12 @@ hidden files."
 Wren hands back the goblet and promises to work at the bakery
 to pay Hilda back for the bread.`,'story');
   print('★  QUEST COMPLETE!  You caught the Market Thief!  ★','win');
+  print(
+`The King smiles. "A promise is a promise, brave squire!"
+He presents you with a real KNIGHT'S SWORD.
+You tuck your reward safely into your inventory bag.`,
+    'story');
+  print('See your reward: `ls ~/inventory`\nTake a closer look: `cat ~/inventory/knights_sword`','hint');
   print(
 `You used real Linux commands to solve this quest:
   ls, ls -a, cd, cat, pwd, mkdir, and mv.
@@ -724,11 +761,14 @@ document.getElementById('frame').addEventListener('click', ()=>{ if(!window.getS
 print('⚔  THE MARKET THIEF  ⚔', 'title');
 
 print(
-`You are a squire in the kingdom of Linux.
-Someday, you hope to become a knight.
+`Welcome to LINUX, a thriving realm of bustling markets, secret passages, and adventures waiting around every corner.
 
-Today, a scroll bearing your name lands at your feet
-in the bustling market square.`,
+You are a SQUIRE:  a young adventurer training to become a knight.
+One day, you hope to earn that title. Until then, you must prove
+your courage, kindness, and clever thinking.
+Today, your adventure begins in the market square.
+
+A sealed scroll waits at your feet. Your name is on it!`,
 'story');
 
 print(
