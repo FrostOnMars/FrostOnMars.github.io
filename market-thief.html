@@ -96,36 +96,8 @@ const FS = D({
   'welcome.txt': F(
 `Greetings, Squire!
 
-The market bustles around you. A baker carries warm bread,
-a hammer rings in the distance, and a pigeon eyes your boots.
-
-Before you begin your quest, find your place on the map.
-
-Type: \`pwd\`
-
-pwd means Print Working Directory.
-"Print" means show on the screen. Your "working directory"
-is the folder you are in right now.
-
-You should see:
-  /home/squire/market
-
-That is your address in this adventure!
-Start at the left: home, then squire, then market.
-Each / separates the names along the path.
-
-A DIRECTORY is a folder. In our kingdom, we imagine folders
-as places you can explore. You are in the market directory:
-the busy MARKET SQUARE.
-
-Now look around! Type: \`ls\`
-That is a little L and a little S. It lists what is here.
-
-Files are like scrolls to read. Directories are places to visit.
-Can you spot wanted_poster.txt?
-
-Read it to discover your quest:
-\`cat wanted_poster.txt\``),
+Your first adventure awaits.
+But every explorer must first find their place on the map.`),
   'wanted_poster.txt': F(
 `=========  WANTED  =========
   The King's SILVER GOBLET
@@ -140,7 +112,7 @@ Start your search at the BAKERY.
 Reward: a real knight's sword.
 ============================
 
-Rooms here are called DIRECTORIES. To walk into one, use cd.
+Follow the smell of fresh bread!
 Type:  \`cd bakery\``, 1),
 
   bakery: D({
@@ -394,7 +366,11 @@ function enterRoom(){
   const firstTime = !visited.has(here);
   visited.add(here);
   print(firstTime ? f.first : f.back, firstTime ? 'story' : 'dim');
-  if(!used.has('cd-taught')){ used.add('cd-taught'); print(`See how the prompt changed to ${pathStr(cwd)}? That shows where you are. Now type \`ls\` to look around.`,'hint'); }
+  if(!used.has('cd-taught')){
+    used.add('cd-taught');
+    print('cd means Change Directory. It moves you into another folder, like entering a new place.','hint');
+    print(f.nudge,'hint');
+  }
   else if(firstTime && f.nudge) print(f.nudge,'hint');
 }
 // ---------- The locked barn ----------
@@ -461,7 +437,21 @@ Spelling matters, and so do CAPITAL letters. Bakery and bakery are different!`,'
       names.map(n=>({t: node.children[n].type==='dir'? n+'/' : n, cls: node.children[n].type==='dir'?'dir':(n.startsWith('.')?'win':'story')})));
     if(!items.length){ print('(nothing here)','dim'); return; }
     printNodes(items);
-    if(!used.has('ls-taught')){ used.add('ls-taught'); print(`Blue names ending in / are DIRECTORIES (rooms). Others are FILES (scrolls) you can read with cat.`,'hint'); }
+    if(!used.has('ls-taught')){
+      used.add('ls-taught');
+      print('ls lists what is here: files to read and folders to explore.', 'hint');
+    }
+
+    if(node === FS && !clues.has(1)){
+      used.add('square-listed');
+      print(
+`A wanted poster flutters beside a stall.
+Someone needs your help!
+
+Read it: \`cat wanted_poster.txt\``,
+        'hint'
+      );
+    }
     if(all && cwd.join('/')==='stables/hayloft' && !won){ print(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief:  \`cat .thief\``,'hint'); }
   },
   cd(args){
@@ -483,15 +473,35 @@ Spelling matters, and so do CAPITAL letters. Bakery and bakery are different!`,'
       if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
       if(r.node.clue==='win'){ winGame(); continue; }
       print(r.node.text,'story');
+            if(r.node === FS.children['welcome.txt']){
+        if(!used.has('welcome-read')){
+          used.add('welcome-read');
+          print(
+            'cat shows the words inside a file. Imagine a cat pawing open a scroll!',
+            'hint'
+          );
+        }
+
+        print('Find your place on the map: `pwd`', 'hint');
+      }
       if(typeof r.node.clue==='number' && !clues.has(r.node.clue)){ clues.add(r.node.clue); updateLog(); print(`✦ Clue found! (${clues.size} of 7)`,'hint'); }
     }
   },
   hint(){
     if(won){ print('You already caught the thief! Type `restart` to play again.','hint'); return; }
     const here = cwd.join('/');
-    if(!clues.has(1)){
-    if(here==='') print('Start with your welcome scroll: `cat welcome.txt`\nTry its map command, `pwd`, then look around with `ls`.\nWhen you are ready, read `cat wanted_poster.txt` to begin your quest.','hint');
-      else print('Head back home first: type `cd ~`\nThen read the poster: `cat wanted_poster.txt`','hint');
+       if(!clues.has(1)){
+      if(here !== ''){
+        print('Return to the market square: `cd ~`', 'hint');
+      } else if(!used.has('welcome-read')){
+        print('Your scroll is waiting. Open it: `cat welcome.txt`', 'hint');
+      } else if(!used.has('pwd-taught')){
+        print('Find your place on the map: `pwd`', 'hint');
+      } else if(!used.has('square-listed')){
+        print('See what is nearby: `ls`', 'hint');
+      } else {
+        print('Find out who needs help: `cat wanted_poster.txt`', 'hint');
+      }
     } else if(!clues.has(2)){
       if(here==='bakery') print('Hilda the baker sees everyone. Talk to her: type `cat baker_hilda.txt`','hint');
       else print('The poster said to start at the BAKERY.\nType `cd ~` to go home, then `cd bakery`','hint');
@@ -597,8 +607,30 @@ from your belt. (You just made a brand-new directory at home!)`,'story');
     }
   },
   rm(){ print('Whoa there, squire! rm REMOVES things FOREVER — far too dangerous\nfor today\'s quest. Nothing in this market may be destroyed.\n(In a real terminal, be VERY careful with rm.)','hint'); },
-  pwd(){ print('/home/squire/market' + (cwd.length? '/'+cwd.join('/') : ''),'story');
-    if(!used.has('pwd-taught')){ used.add('pwd-taught'); print('That is your full address, like a map pin. Each / is a door between rooms.','hint'); } },
+  pwd(){
+    print(
+      '/home/squire/market' + (cwd.length ? '/' + cwd.join('/') : ''),
+      'story'
+    );
+
+    if(!used.has('pwd-taught')){
+      used.add('pwd-taught');
+      print(
+`pwd shows your current folder's address.
+A folder is called a DIRECTORY. In our adventure, it is a place.`,
+        'hint'
+      );
+    }
+
+    if(cwd.length === 0 && !clues.has(1)){
+      print(
+`Your map places you in the market square.
+What is nearby? Look around: \`ls\`
+That's a little L and a little S.`,
+        'hint'
+      );
+    }
+  },
   clear(){ out.innerHTML=''; },
   restart(){ location.reload(); },
   whoami(){ print('squire','story'); print('(Bonus command! whoami tells you your user name.)','hint'); },
@@ -689,29 +721,24 @@ if(window.visualViewport){ visualViewport.addEventListener('resize', ()=>{ out.s
 document.getElementById('frame').addEventListener('click', ()=>{ if(!window.getSelection().toString()) input.focus(); });
 
 // ---------- Start ----------
-print('⚔  THE MARKET THIEF  ⚔','title');
+print('⚔  THE MARKET THIEF  ⚔', 'title');
+
 print(
-`Welcome to LINUX, a thriving realm of bustling markets, secret passages, and adventures waiting around every corner.
+`You are a squire in the kingdom of Linux.
+Someday, you hope to become a knight.
 
-You are a SQUIRE:  a young adventurer training to become a knight.
-One day, you hope to earn that title. Until then, you must prove
-your courage, kindness, and clever thinking.
-
-Today, your adventure begins in the market square.
-A sealed scroll waits at your feet. Your name is on it!`,
+Today, a scroll bearing your name lands at your feet
+in the bustling market square.`,
 'story');
+
 print(
-`In this adventure, you act by typing commands.
-Type them on the line below, then press Enter.
+`Open the scroll: \`cat welcome.txt\`
+Type it below, then press Enter.
 
-Your first command is cat. It shows the words inside a file.
-Imagine a curious cat pawing open a scroll!
-
-Open your welcome scroll: \`cat welcome.txt\`
-
-Need a hand? Type \`hint\` for help with your next step,
-or \`help\` to see the commands.`,
+Stuck? Type \`hint\`.`,
 'hint');
+
+updateLog();
 input.focus();
 </script>
 
