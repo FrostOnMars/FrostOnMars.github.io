@@ -9,6 +9,9 @@ green-hooded thief through a medieval market. Works on desktop and mobile.
 
 ## Quest reward
 
+Before the wanted poster is read, all six NPCs point players to
+`cat ~/wanted_poster.txt` instead of giving their usual dialogue or clues.
+
 Farmer Odo offers his key only after the player reads Bram's clue about the
 stables and then talks to Odo. Moving or copying the key before his permission
 is blocked with guidance on what to do next.

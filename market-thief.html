@@ -89,7 +89,7 @@ form:focus-within{background:rgba(242,181,68,.04)}
 
 <script>
 // ---------- The market, built like a real Linux folder tree ----------
-const F = (text, clue) => ({type:'file', text, clue});
+const F = (text, clue, news) => ({type:'file', text, clue, news});
 const D = (children) => ({type:'dir', children});
 
 const FS = D({
@@ -124,7 +124,9 @@ That's the BLACKSMITH."
 
 To go back out to the square, type  \`cd ..\`
 (Two dots mean "the room I came from.")
-Then try  \`cd blacksmith\``, 2),
+Then try  \`cd blacksmith\``, 2,
+`Hilda dusts flour from her apron and points at a peeling sign on the wall.
+"Have you heard the news, dear? Read that before your bread gets cold!"`),
     'fresh_bread.txt': F(
 `Warm, crusty loaves sit in neat rows. It smells wonderful.
 One loaf is missing. Somebody was hungry... and sneaky.`)
@@ -139,7 +141,9 @@ One loaf is missing. Somebody was hungry... and sneaky.`)
 heading for the horses. Try the STABLES. I swear I heard a ruckus back there!"
 
 Go back with  \`cd ..\`  and then  \`cd stables\`
-Or do it in one step:  \`cd ../stables\``, 3),
+Or do it in one step:  \`cd ../stables\``, 3,
+`Bram lowers his hammer and points at a peeling sign on the wall.
+"CLANG! Heard the news, squire? That sign has the story!"`),
     'anvil.txt': F(
 `A big black anvil. It is too heavy to lift, even for a knight.`)
   }),
@@ -151,7 +155,9 @@ Or do it in one step:  \`cd ../stables\``, 3),
 "Looking for Farmer Odo? You JUST missed him! Selling melons all
 morning made him thirsty, so he's taking a break at the TAVERN."
 
-Go find him:  \`cd ..\`  then  \`cd tavern\``, 4),
+Go find him:  \`cd ..\`  then  \`cd tavern\``, 4,
+`Tilly steadies a wobbly watermelon and points at a peeling sign on the wall.
+"Have you heard the news? It's juicier than these melons! Take a look!"`),
     'apples.txt': F(
 `Red apples, green apples, and one very wormy apple. Yuck.`),
     'watermelons.txt': F(
@@ -166,7 +172,9 @@ travelers eat, drink, and rest.)
 
 "No green hoods in here today, love. But if you're after Farmer
 Odo, he's in the corner booth resting his feet.
-And don't go poking about in my cellar!"`),
+And don't go poking about in my cellar!"`, undefined,
+`Mags polishes a mug and points at a peeling sign on the wall.
+"Have you heard the news, love? Everyone's talking about that sign!"`),
     'farmer_odo.txt': F(
 `Farmer Odo sips cider in the corner booth, boots up on a stool.
 
@@ -182,7 +190,9 @@ Step 2 - pick up the key:   \`mv iron_key ~/inventory\`
          (mv means MoVe: it moves a file into a directory)
 Step 3 - peek in your bag:  \`ls ~/inventory\`
 
-Then march to the barn:  \`cd ~/stables\``, 5),
+Then march to the barn:  \`cd ~/stables\``, 5,
+`Odo wipes sweat off his brow and points at a peeling sign on the wall.
+"Hello, squire! Heard the news? I've been too busy with melons. Read that sign!"`),
     'iron_key': F(
 `A heavy iron key, cold and a little rusty. It must open the
 big barn doors at the STABLES.
@@ -205,7 +215,9 @@ Type \`cd ~\` to zoom all the way home to the market square.`)
 That's that room high up under the roof where we keep the hay.
 I think someone is up there!"
 
-Type  \`ls\`  to look for the way up.`, 6),
+Type  \`ls\`  to look for the way up.`, 6,
+`Pip twists a handful of hay and points at a peeling sign on the wall.
+"Have you heard the news? Even the horses seem worried! Read that sign!"`),
     'horse.txt': F(
 `A brown horse named Biscuit snorts and stares at the ceiling.`),
     hayloft: D({
@@ -405,9 +417,21 @@ into the lock. CLUNK! The big barn doors creak open.`,'story');
 }
 
 // ---------- Commands ----------
+function pointToPoster(node){
+  if(clues.has(1) || !node.news) return false;
+  print(node.news,'story');
+  print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+  return true;
+}
+
 function canTakeKey(parts){
   if(parts[parts.length-1]!=='iron_key' || odoOfferedKey) return true;
   print('"Careful, squire!" Odo says. "Taking my key without asking would be stealing."','story');
+  if(!clues.has(1)){
+    print('Odo points at a peeling sign on the wall. "Have you heard the news, squire?"','story');
+    print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+    return false;
+  }
   if(clues.has(3)){
     print('Tell Odo about the thief: `cat ~/tavern/farmer_odo.txt`','hint');
   } else {
@@ -482,6 +506,7 @@ Read it: \`cat wanted_poster.txt\``,
       if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); continue; }
       if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
       if(r.node.clue==='win'){ winGame(); continue; }
+      if(pointToPoster(r.node)) continue;
       if(r.node.clue===5){
         if(!clues.has(3)){
           print('Farmer Odo waves hello and wipes sweat off his brow.\n"Hot work selling watermelons! What brings you here, squire?"','story');
@@ -635,7 +660,7 @@ The ~ means home, so it works wherever you are.`,
     const dst = resolve(args[1]);
     if(dst.err || !dst.node || dst.node.type!=='dir' || lockedPath(dst.parts)){ print(`cp: cannot copy to '${args[1]}': No such directory`,'err'); return; }
     const name = src.parts[src.parts.length-1];
-    dst.node.children[name] = {type:'file', text:src.node.text};
+    dst.node.children[name] = {type:'file', text:src.node.text, news:src.node.news};
     print(`You make a perfect copy of ${name}. Now there are two! (Bonus command: cp means CoPy.)`,'story');
   },
   touch(args){
