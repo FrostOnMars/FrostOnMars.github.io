@@ -235,6 +235,7 @@ let visited = new Set();
 let stuck = 0;
 let unlocked = false;   // the barn doors at the stables
 let sawLocked = false;  // player has bumped into the locked doors
+let odoOfferedKey = false;
 const TRACK = ['ls','cd','cat','pwd','mkdir','mv','help','clear'];
 
 const out = document.getElementById('out');
@@ -404,6 +405,17 @@ into the lock. CLUNK! The big barn doors creak open.`,'story');
 }
 
 // ---------- Commands ----------
+function canTakeKey(parts){
+  if(parts[parts.length-1]!=='iron_key' || odoOfferedKey) return true;
+  print('"Careful, squire!" Odo says. "Taking my key without asking would be stealing."','story');
+  if(clues.has(3)){
+    print('Tell Odo about the thief: `cat ~/tavern/farmer_odo.txt`','hint');
+  } else {
+    print('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
+  }
+  return false;
+}
+
 const CMDS = {
   help(){
     print(
@@ -470,6 +482,19 @@ Read it: \`cat wanted_poster.txt\``,
       if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); continue; }
       if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
       if(r.node.clue==='win'){ winGame(); continue; }
+      if(r.node.clue===5){
+        if(!clues.has(3)){
+          print('Farmer Odo waves hello and wipes sweat off his brow.\n"Hot work selling watermelons! What brings you here, squire?"','story');
+          print('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
+          continue;
+        }
+        odoOfferedKey = true;
+      }
+      if(r.parts[r.parts.length-1]==='iron_key' && !odoOfferedKey){
+        print('A heavy iron key rests on the table. It belongs to Farmer Odo.','story');
+        print('Ask its owner before taking it: `cat ~/tavern/farmer_odo.txt`','hint');
+        continue;
+      }
       print(r.node.text,'story');
             if(r.node === FS.children['welcome.txt']){
         if(!used.has('welcome-read')){
@@ -582,6 +607,7 @@ The ~ means home, so it works wherever you are.`,
     if(src.err || !src.node){ print(`mv: cannot stat '${args[0]}': No such file or directory`,'err'); suggest(args[0]); return; }
     if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
     if(src.node.type==='dir'){ print(`mv: '${args[0]}' is a whole room! A squire can only carry files, not rooms.`,'err'); return; }
+    if(!canTakeKey(src.parts)) return;
     const dst = resolve(args[1]);
     if(dst.err || !dst.node){ print(`mv: cannot move to '${args[1]}': No such file or directory\nIs there a bag or room with that name? Make one with \`mkdir ${args[1]}\``,'err'); return; }
     if(lockedPath(dst.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot put things inside.','story'); return; }
@@ -605,6 +631,7 @@ The ~ means home, so it works wherever you are.`,
     if(src.err || !src.node){ print(`cp: cannot stat '${args[0]}': No such file or directory`,'err'); suggest(args[0]); return; }
     if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
     if(src.node.type==='dir'){ print(`cp: '${args[0]}' is a directory. In this game you can only copy files.`,'err'); return; }
+    if(!canTakeKey(src.parts)) return;
     const dst = resolve(args[1]);
     if(dst.err || !dst.node || dst.node.type!=='dir' || lockedPath(dst.parts)){ print(`cp: cannot copy to '${args[1]}': No such directory`,'err'); return; }
     const name = src.parts[src.parts.length-1];

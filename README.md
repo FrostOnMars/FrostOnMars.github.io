@@ -9,6 +9,10 @@ green-hooded thief through a medieval market. Works on desktop and mobile.
 
 ## Quest reward
 
+Farmer Odo offers his key only after the player reads Bram's clue about the
+stables and then talks to Odo. Moving or copying the key before his permission
+is blocked with guidance on what to do next.
+
 Catching the thief adds `knights_sword` to `~/inventory`, alongside anything
 already in the bag. Read its description with `cat ~/inventory/knights_sword`.
 The reward lasts for the current game only; refreshing or restarting resets it.
