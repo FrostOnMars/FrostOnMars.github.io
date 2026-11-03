@@ -126,7 +126,7 @@ To go back out to the square, type  \`cd ..\`
 (Two dots mean "the room I came from.")
 Then try  \`cd blacksmith\``, 2,
 `Hilda dusts flour from her apron and points at a peeling sign on the wall.
-"Have you heard the news, dear? Read that before your bread gets cold!"`),
+"Have you heard the news, dear? Here, take a loaf. And read that before your bread gets cold!"`),
     'fresh_bread.txt': F(
 `Warm, crusty loaves sit in neat rows. It smells wonderful.
 One loaf is missing. Somebody was hungry... and sneaky.`)
@@ -192,7 +192,7 @@ Step 3 - peek in your bag:  \`ls ~/inventory\`
 
 Then march to the barn:  \`cd ~/stables\``, 5,
 `Odo wipes sweat off his brow and points at a peeling sign on the wall.
-"Hello, squire! Heard the news? I've been too busy with melons. Read that sign!"`),
+"Hello, squire! Heard the news? I've been too busy with the melons, but they say a thief's about!"`),
     'iron_key': F(
 `A heavy iron key, cold and a little rusty. It must open the
 big barn doors at the STABLES.
@@ -237,6 +237,7 @@ Type:  \`ls -a\``, 7),
 });
 
 // ---------- State ----------
+const freshBread = FS.children.bakery.children['fresh_bread.txt'];
 const HOME = [];
 let cwd = [];
 let clues = new Set();
@@ -248,6 +249,8 @@ let stuck = 0;
 let unlocked = false;   // the barn doors at the stables
 let sawLocked = false;  // player has bumped into the locked doors
 let odoOfferedKey = false;
+let breadOffered = false;
+let breadEaten = false;
 const TRACK = ['ls','cd','cat','pwd','mkdir','mv','help','clear'];
 
 const out = document.getElementById('out');
@@ -419,6 +422,21 @@ into the lock. CLUNK! The big barn doors creak open.`,'story');
 // ---------- Commands ----------
 function pointToPoster(node){
   if(clues.has(1) || !node.news) return false;
+  if(node.clue===2){
+    if(!breadOffered){
+      breadOffered = true;
+      print(node.news,'story');
+      print('Hilda hands you a warm loaf.','story');
+    } else {
+      print('Hilda smiles and points at the peeling sign. "Have you read the news yet, dear?"','story');
+    }
+    if(!breadEaten){
+      print('Read about your treat: `cat ~/bakery/fresh_bread.txt`','hint');
+    } else {
+      print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+    }
+    return true;
+  }
   print(node.news,'story');
   print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
   return true;
@@ -507,6 +525,17 @@ Read it: \`cat wanted_poster.txt\``,
       if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
       if(r.node.clue==='win'){ winGame(); continue; }
       if(pointToPoster(r.node)) continue;
+      if(r.node===freshBread && breadOffered){
+        if(breadEaten){
+          print('Only a few crumbs remain. That was delicious!','story');
+        } else {
+          breadEaten = true;
+          print('You bite into the warm bread. CRUNCH! The crust crackles, and the soft middle tastes buttery and delicious.','story');
+          print("With a full tummy, you're ready for adventure!",'story');
+        }
+        if(!clues.has(1)) print('Read the news: `cat ~/wanted_poster.txt`','hint');
+        continue;
+      }
       if(r.node.clue===5){
         if(!clues.has(3)){
           print('Farmer Odo waves hello and wipes sweat off his brow.\n"Hot work selling watermelons! What brings you here, squire?"','story');

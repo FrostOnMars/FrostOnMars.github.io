@@ -11,6 +11,8 @@ green-hooded thief through a medieval market. Works on desktop and mobile.
 
 Before the wanted poster is read, all six NPCs point players to
 `cat ~/wanted_poster.txt` instead of giving their usual dialogue or clues.
+Hilda also offers one loaf: reading `cat ~/bakery/fresh_bread.txt` after her
+offer describes eating it. Later reads describe crumbs; the file is not deleted.
 
 Farmer Odo offers his key only after the player reads Bram's clue about the
 stables and then talks to Odo. Moving or copying the key before his permission
