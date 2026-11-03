@@ -63,15 +63,13 @@ echo "Pulling the tournament bell rope!"
 `Guard Nessa shields her eyes from the sun. You notice her badge is missing, the one that usually gleams on her chest.
 
 "Stole from you too, hon?" She sighs, then juts a thumb at a giant scroll on the desk.
-"We keep track of odd sightings here. Someone must have seen your bird.
-Have a read. I'll hold this end so it doesn't roll into the moat."
+"We keep track of odd sightings here. Someone must have seen your bird. Have a read. I'll hold this end so it doesn't roll into the moat."
 
 Read the log: \`cat ~/courtyard/sightings_log.txt\``),
     'sightings_log.txt': F(sightingsLog),
     'secret.txt': F(
 `Nessa leans close. "My secret shortcut? grep!
-cat shows the whole file. grep filters it, showing only lines
-that match what you are looking for."
+cat shows the whole file. grep filters it, showing only lines that match what you are looking for."
 
 "Here's how: grep, then your search word, then the filename.
 Let's look for bird in the sightings log:
@@ -109,12 +107,10 @@ Bright cloth covers the jousting saddles. A chestnut horse stamps eagerly.
 The riders wait for the bell before taking their places on the field.`),
     'Squire_Benson.txt': F(
 `Squire Benson stands in front of a drinks stand, arranging cups in neat rows.
-"You're ringing the bell? Then everyone is counting on you!
-The knights are ready, but the townsfolk won't come until they hear it."
+"You're ringing the bell? Then everyone is counting on you! The knights are ready, but the townsfolk won't come until they hear it."
 
 He offers you a cup of Mage Moss's Fizzy Zinger.
-"Moss brewed it for the squires. It lets you jump twice as high!
-One cup each. Save those springy legs for your important errand."
+"Moss brewed it for the squires. It lets you jump twice as high! One cup each. Save those springy legs for your important errand."
 
 Read about your drink: \`cat ~/tournament/fizzy_zinger.txt\``),
     'fizzy_zinger.txt': F(
@@ -129,16 +125,8 @@ Until you ring it, these seats will stay empty.`)
   garden: D({
     'mage_moss.txt': F(
 `Mage Moss sits on a floating cabbage, watching birds through enormous spectacles.
-"I've spent all day summoning sunflower seeds. Excellent birdwatching!
-The bird in the pie hat LOVES them. Shall I teach you my seed spell?"
-
-"Spells can have a light side or a dark side. A friendly name is no
-guarantee! Inspect a spell before deciding whether to cast it.
-Scripts are like spells: read their instructions first."
-
-"Here is mine. Read it, and tell me what it does:
-\`cat ~/garden/offer_seed.sh\`
-If you don't understand a script, ask a trusted grown-up before running it!"`),
+The tip of his crooked purple hat droops over the edge of his nose.
+"I've spent all day summoning sunflower seeds. Excellent birdwatching! The bird in the pie hat LOVES them."`),
     'offer_seed.sh': F(
 `#!/bin/sh
 echo "Summoning a pile of sunflower seeds beside the cabbage!"
@@ -157,6 +145,7 @@ let sightingsRead = false;
 let secretRead = false;
 let cookMet = false;
 let mageMet = false;
+let mageLessonStep = 0;
 let seedInspected = false;
 let drinkOffered = false;
 let zingerDrunk = false;
@@ -195,6 +184,58 @@ function localCommand(command){
 function print(text, cls='story'){
   Terminal.render(out, input, text, cls, {formatCommand:localCommand});
 }
+const conversation = Terminal.createConversation({out,input,print});
+function mossTopics(){
+  conversation.choose({
+    text:'Type 1 or 2 to choose which question to ask the wizard.',
+    choices:[
+      {text:'Ask about the bird in the pie hat?', onSelect(){
+        print('"Oh, yes. Cheeky little fellow. Flew in carrying something in his beak, but he always drops it to eat seeds. Then he picks it back up."');
+        mossTopics();
+      }},
+      {text:'Ask about sunflower seeds?', onSelect(){
+        print('"Just a little everyday magic, Squire, and it draws the birds from every direction. They can\'t resist a sunflower seed or two. Shall I teach you my seed spell?"');
+        mossLesson();
+      }}
+    ]
+  });
+}
+function mossLesson(){
+  const decline = ()=>{
+    print('Moss mumbles, "Sure, sure. You children are always in such a hurry. Come back if you need to find me."');
+    print('Talk to Moss again whenever you like: `cat ~/garden/mage_moss.txt`','hint');
+    if(mageLessonStep===0) mossTopics();
+  };
+  if(mageLessonStep===0){
+    conversation.yesNo({
+      text:'Ask Moss about the seed spell?',
+      onYes(){
+        mageLessonStep=1;
+        print('"It\'s a tricky thing, magic. Spells can have a light side... and a dark side. A friendly-sounding name is no guarantee!"\nThe mage peers at you with one eye. "Do you want to know the difference?"');
+        mossLesson();
+      },
+      onNo:decline
+    });
+  } else if(mageLessonStep===1){
+    conversation.yesNo({
+      text:'Ask Moss about the difference between spells?',
+      onYes(){
+        mageLessonStep=2;
+        print('"You have to inspect a spell before deciding whether to cast it. Always, always, always read the instructions first."\nHe chuckles and stares off into space.');
+        print('Moss is teaching you a special kind of spell called a script: a file of instructions a computer can follow.\nLike spells, scripts can help or cause harm. A friendly name does not prove a script is safe.\nAsk a trusted grown-up to examine unfamiliar scripts with you before running them.');
+        mossLesson();
+      },
+      onNo:decline
+    });
+  } else if(mageLessonStep===2){
+    conversation.pause({onContinue(){
+      mageLessonStep=3;
+      mossLesson();
+    }});
+  } else {
+    print('"Go ahead, Squire. Read my spell, and tell me what it does:"\n`cat ~/garden/offer_seed.sh`\n"If you don\'t understand a script, ask a trusted grown-up before running it!"');
+  }
+}
 function update(){
   prompt.textContent = 'squire@tower:' + pathStr(cwd) + '$';
   document.getElementById('status').textContent = won ? 'Tournament announced!' :
@@ -208,6 +249,7 @@ function getNode(path){
   return result;
 }
 function nextStep(){
+  if(conversation.show()) return;
   if(won){ print('The tournament is underway! Explore, or type `restart` to play again.','hint'); return; }
   if(!assignmentRead){ print("Read your knight's assignment: `cat ~/assignment.txt`",'hint'); return; }
   if(!birdTrail){
@@ -227,6 +269,7 @@ function nextStep(){
   if(!birdFed){
     const script = FS.children.garden.children['offer_seed.sh'];
     if(!mageMet) print('A wizard is watching the bird. Read his message: `cat ~/garden/mage_moss.txt`','hint');
+    else if(mageLessonStep<3 && !seedInspected) print('Moss can continue your spell lesson: `cat ~/garden/mage_moss.txt`','hint');
     else if(!seedInspected) print('Inspect Moss\'s spell before casting it: `cat ~/garden/offer_seed.sh`','hint');
     else if(!script.executable) print('Allow the inspected spell to run: `chmod +x ~/garden/offer_seed.sh`','hint');
     else print('Try the seed spell: `cd ~/garden` then `./offer_seed.sh`','hint');
@@ -398,7 +441,11 @@ const CMDS = {
       }
       if(result.node===FS.children.courtyard.children['guard.txt']) guardMet=true;
       if(result.node===FS.children.kitchen.children['cook.txt']) cookMet=true;
-      if(result.node===FS.children.garden.children['mage_moss.txt']) mageMet=true;
+      if(result.node===FS.children.garden.children['mage_moss.txt']){
+        mageMet=true;
+        if(mageLessonStep===0) mossTopics();
+        else mossLesson();
+      }
       if(result.node.action==='feed'){
         seedInspected=true;
         print('The script prints a message; this game adds the pretend seed magic.\nMoss explains: "chmod changes permissions. +x allows a script to run.\nIt does NOT make a script safe! Only allow scripts you understand and trust."');
@@ -515,18 +562,21 @@ Use \`hint\` for your next step or \`restart\` to begin again.
 This is a practice terminal: it supports only the forms taught here.
 Scripts and their story effects are simulated, not run on your computer.`,
       'hint');
+    print('Conversation choices are story actions, not Linux commands.\nAnswer [y/n] with y, yes, n, or no (capitals work too).\nFor numbered choices, type the number. For a pause, press Enter with an empty input.\nYou can also click a choice. Commands still work while a question is waiting.','hint');
     if(zingerDrunk) print('Bonus adventure action (not Linux): `jump` over the low garden fence when the clapper drops.','hint');
   },
-  clear(){ out.replaceChildren(); },
+  clear(){ out.replaceChildren(); conversation.show(); },
   restart(){ location.reload(); }
 };
 function submit(){
   const line = input.value.trim();
   input.value = '';
+  const [command,...args] = line.split(/\s+/);
+  const isCommand = Object.hasOwn(CMDS,command) || command.startsWith('./') || command.startsWith('~/');
+  if(conversation.handle(line,{isCommand})){ update(); return; }
   if(!line) return;
   print(prompt.textContent + ' ' + line,'echo');
   commandHistory.add(line);
-  const [command,...args] = line.split(/\s+/);
   if(command.startsWith('./') || command.startsWith('~/')){
     if(args.length) print('These quest scripts do not take arguments.','err');
     else runScript(command);

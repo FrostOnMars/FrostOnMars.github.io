@@ -193,6 +193,105 @@ const Terminal = (() => {
     return div;
   }
 
+  function createConversation({out, input, print}){
+    let pending = null;
+    let buttons = [];
+
+    function disableButtons(){
+      for(const button of buttons) button.disabled = true;
+      buttons = [];
+    }
+
+    function cancel(){
+      disableButtons();
+      pending = null;
+    }
+
+    function show(){
+      if(!pending) return false;
+      disableButtons();
+      const question = pending;
+      print(question.text,'hint');
+      const group = document.createElement('div');
+      group.className = 'conversation-options';
+      group.setAttribute('role','group');
+      group.setAttribute('aria-label',question.text);
+      for(const answer of question.answers){
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.textContent = answer.label;
+        button.addEventListener('click',event=>{
+          event.stopPropagation();
+          if(button.disabled || pending!==question) return;
+          input.value = '';
+          handle(answer.values[0]);
+          input.focus();
+        });
+        buttons.push(button);
+        group.appendChild(button);
+      }
+      out.appendChild(group);
+      out.scrollTop = out.scrollHeight;
+      return true;
+    }
+
+    function start(question){
+      cancel();
+      pending = question;
+      show();
+    }
+
+    function handle(line, {isCommand=false} = {}){
+      if(!pending) return false;
+      const value = line.trim().toLowerCase();
+      const answer = pending.answers.find(item=>item.values.includes(value));
+      if(answer){
+        cancel();
+        print(value ? 'You: '+line.trim() : 'You continue.','echo');
+        answer.run();
+        return true;
+      }
+      if(isCommand) return false;
+      print(pending.help+' You can still use commands such as hint.','hint');
+      show();
+      return true;
+    }
+
+    return {
+      get active(){ return pending!==null; },
+      yesNo({text, onYes, onNo}){
+        start({
+          text:text+' [y/n]',
+          help:'Answer y or yes, or n or no.',
+          answers:[
+            {label:'Y - Yes', values:['y','yes'], run:onYes},
+            {label:'N - No', values:['n','no'], run:onNo}
+          ]
+        });
+      },
+      choose({text, choices}){
+        if(!choices.length) throw new Error('A conversation needs at least one choice.');
+        start({
+          text,
+          help:'Choose a number from 1 to '+choices.length+'.',
+          answers:choices.map((choice,index)=>({
+            label:(index+1)+'. '+choice.text,
+            values:[String(index+1)],
+            run:choice.onSelect
+          }))
+        });
+      },
+      pause({onContinue}){
+        start({
+          text:'Press Enter to continue.',
+          help:'Press Enter with an empty input to continue.',
+          answers:[{label:'Continue (Enter)', values:[''], run:onContinue}]
+        });
+      },
+      handle, show, cancel
+    };
+  }
+
   function bindControls({input, out, keys, complete, previous, next, runCommand}){
     input.addEventListener('keydown',event=>{
       if(event.key==='Tab'){ event.preventDefault(); complete(); }
@@ -216,5 +315,5 @@ const Terminal = (() => {
     }
   }
 
-  return {pathStr, nodeAt, resolve, createHistory, complete, showCompletions, renderListing, render, bindControls};
+  return {pathStr, nodeAt, resolve, createHistory, complete, showCompletions, renderListing, render, createConversation, bindControls};
 })();

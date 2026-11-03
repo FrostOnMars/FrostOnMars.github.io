@@ -96,6 +96,9 @@ a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: tr
 
 /* Shared adventure terminal */
 .adventure {
+  box-sizing: border-box;
+  width: 100%;
+  margin-inline: auto;
   height: 100dvh;
   font-size: 14px;
   padding: 12px max(16px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
@@ -114,7 +117,11 @@ a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: tr
 .win { color: var(--amber); font-weight: bold; }
 .adventure code { cursor: pointer; }
 .keys { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px 14px; border-top: 1px dashed var(--edge); }
-.keys button { font: inherit; color: var(--amber); background: #f2b54414; border: 1px solid var(--edge); border-radius: 4px; padding: 6px 12px; min-height: 36px; cursor: pointer; }
+.keys button, .conversation-options button { font: inherit; color: var(--amber); background: #f2b54414; border: 1px solid var(--edge); border-radius: 4px; padding: 6px 12px; min-height: 36px; cursor: pointer; }
+.conversation-options { display: flex; flex-wrap: wrap; gap: 8px; }
+.conversation-options button { max-width: 100%; text-align: left; overflow-wrap: anywhere; }
+.conversation-options button:disabled { opacity: .5; cursor: default; }
+.conversation-options button:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 .adventure form { display: flex; align-items: center; gap: 8px; padding: 8px 14px 12px; }
 #prompt { color: var(--amber); overflow-wrap: anywhere; }
 #cmd { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--ink); font: 16px var(--mono); }
@@ -126,7 +133,6 @@ a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: tr
 .tower-adventure h1 { font-family: "IM Fell English SC", Georgia, serif; }
 .tower-adventure code { background: #f2b54418; font-family: inherit; }
 #status { color: var(--moss); font-size: .8rem; }
-.echo { margin-top: 16px; color: var(--dim); }
 
 /* The market uses a slightly tighter terminal with animated new lines. */
 html:has(.market-adventure) {
@@ -152,8 +158,15 @@ html:has(.market-adventure) {
 .market-adventure #out { padding: 14px 14px 4px; }
 .market-adventure #out > div { margin: 0 0 6px; }
 .market-adventure #out > div:first-child { margin-top: 0; }
+#out > div.story { margin-bottom: 1lh; }
 .cmd { color: var(--ink); margin-top: 16px; }
 .cmd .p { color: var(--amber); }
+.muted-command-echoes #out > :is(.echo, .cmd) {
+  color: var(--dim);
+  margin-top: 16px;
+  margin-bottom: 10px;
+}
+.muted-command-echoes #out > .cmd .p { color: inherit; }
 .market-adventure .dir { font-weight: 600; }
 .title { font-family: var(--display); color: var(--amber); font-size: 1.3em; }
 .market-adventure .win { font-weight: 600; }
@@ -176,6 +189,10 @@ html:has(.market-adventure) {
 }
 .file-list .file-link:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 .file-list .dir { font-weight: 600; }
+
+@media (min-width: 64rem) {
+  .adventure { width: 76%; max-width: 90ch; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   .quest { transition: none; }
