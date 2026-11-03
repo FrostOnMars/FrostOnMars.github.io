@@ -94,14 +94,38 @@ const D = (children) => ({type:'dir', children});
 
 const FS = D({
   'welcome.txt': F(
-`Welcome, young SQUIRE! (A squire is a helper who is training to become a knight.)
+`Greetings, Squire!
 
-You are standing in the middle of the busy MARKET SQUARE. Merchants
-(people who sell things) shout about bread, apples, and horseshoes.
+The market bustles around you. A baker carries warm bread,
+a hammer rings in the distance, and a pigeon eyes your boots.
 
-Something terrible has happened. Read the wanted poster to find out what.
+Before you begin your quest, find your place on the map.
 
-Type:  \`cat wanted_poster.txt\``),
+Type: \`pwd\`
+
+pwd means Print Working Directory.
+"Print" means show on the screen. Your "working directory"
+is the folder you are in right now.
+
+You should see:
+  /home/squire/market
+
+That is your address in this adventure!
+Start at the left: home, then squire, then market.
+Each / separates the names along the path.
+
+A DIRECTORY is a folder. In our kingdom, we imagine folders
+as places you can explore. You are in the market directory:
+the busy MARKET SQUARE.
+
+Now look around! Type: \`ls\`
+That is a little L and a little S. It lists what is here.
+
+Files are like scrolls to read. Directories are places to visit.
+Can you spot wanted_poster.txt?
+
+Read it to discover your quest:
+\`cat wanted_poster.txt\``),
   'wanted_poster.txt': F(
 `=========  WANTED  =========
   The King's SILVER GOBLET
@@ -466,7 +490,7 @@ Spelling matters, and so do CAPITAL letters. Bakery and bakery are different!`,'
     if(won){ print('You already caught the thief! Type `restart` to play again.','hint'); return; }
     const here = cwd.join('/');
     if(!clues.has(1)){
-      if(here==='') print('Read the wanted poster to begin your quest: type `cat wanted_poster.txt`','hint');
+    if(here==='') print('Start with your welcome scroll: `cat welcome.txt`\nTry its map command, `pwd`, then look around with `ls`.\nWhen you are ready, read `cat wanted_poster.txt` to begin your quest.','hint');
       else print('Head back home first: type `cd ~`\nThen read the poster: `cat wanted_poster.txt`','hint');
     } else if(!clues.has(2)){
       if(here==='bakery') print('Hilda the baker sees everyone. Talk to her: type `cat baker_hilda.txt`','hint');
@@ -667,12 +691,27 @@ document.getElementById('frame').addEventListener('click', ()=>{ if(!window.getS
 // ---------- Start ----------
 print('⚔  THE MARKET THIEF  ⚔','title');
 print(
-`This game is played by TYPING commands, just like a real Linux terminal.
-Type a command on the line at the bottom, then press Enter.
+`Welcome to LINUX, a thriving realm of bustling markets, secret passages, and adventures waiting around every corner.
 
-Let's start. Type  \`ls\`  (that's a little L and a little S) to look around.
-Don't know what to do next? Type  \`hint\`  for a nudge, or  \`help\`  for all commands.`,'hint');
-updateLog();
+You are a SQUIRE:  a young adventurer training to become a knight.
+One day, you hope to earn that title. Until then, you must prove
+your courage, kindness, and clever thinking.
+
+Today, your adventure begins in the market square.
+A sealed scroll waits at your feet. Your name is on it!`,
+'story');
+print(
+`In this adventure, you act by typing commands.
+Type them on the line below, then press Enter.
+
+Your first command is cat. It shows the words inside a file.
+Imagine a curious cat pawing open a scroll!
+
+Open your welcome scroll: \`cat welcome.txt\`
+
+Need a hand? Type \`hint\` for help with your next step,
+or \`help\` to see the commands.`,
+'hint');
 input.focus();
 </script>
 
