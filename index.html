@@ -7,83 +7,9 @@
 <meta name="description" content="Teach Linux to kids with text-based adventure games. Real commands, real terminal skills, medieval quests.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;600&display=swap">
-<style>
-/* Matches the look of the adventures: dark oak tavern wall, parchment text, amber accents. */
-:root{
-  --oak:#1b1410;
-  --panel:#120f0c;
-  --ink:#e9dcc0;
-  --dim:#9c8c70;
-  --amber:#f2b544;
-  --moss:#8fc28a;
-  --edge:#3a2c20;
-  --display:"IM Fell English SC", Georgia, "Times New Roman", serif;
-  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
-  color-scheme:dark;
-}
-*{box-sizing:border-box}
-body{
-  margin:0; min-height:100dvh; background:var(--oak); color:var(--ink);
-  font-family:var(--mono); line-height:1.6;
-  padding:24px max(20px, env(safe-area-inset-left)) 40px max(20px, env(safe-area-inset-right));
-  display:flex; flex-direction:column; align-items:center;
-  touch-action:manipulation;
-}
-header{text-align:center; max-width:46rem; margin-bottom:8px}
-h1{
-  font-family:var(--display); font-weight:400; color:var(--amber);
-  font-size:clamp(2rem, 7vw, 3.2rem); margin:0 0 4px; letter-spacing:.02em; text-wrap:balance;
-}
-.tagline{color:var(--dim); font-size:clamp(.85rem, 2.6vw, 1rem); margin:0 0 6px}
-.tagline b{color:var(--ink)}
-.rule{
-  width:min(420px, 80%); height:1px; border:0; margin:18px auto;
-  background:linear-gradient(90deg, transparent, var(--amber), transparent);
-}
-main{width:100%; max-width:46rem}
-h2{
-  font-family:var(--display); font-weight:400; color:var(--ink);
-  font-size:clamp(1.2rem, 4vw, 1.6rem); margin:0 0 14px; text-align:center;
-}
-.board{display:flex; flex-direction:column; gap:16px}
-.quest{
-  display:block; text-decoration:none; color:inherit;
-  background:var(--panel); border:1px solid var(--edge); border-radius:8px;
-  padding:18px 20px; box-shadow:inset 0 0 30px rgba(0,0,0,.5);
-  transition:border-color .15s ease, transform .15s ease;
-}
-a.quest:hover, a.quest:focus-visible{border-color:var(--amber); transform:translateY(-2px)}
-.quest-top{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
-.quest h3{
-  font-family:var(--display); font-weight:400; color:var(--amber);
-  font-size:clamp(1.3rem, 5vw, 1.7rem); margin:0;
-}
-.badge{
-  font-size:.72rem; color:var(--amber); border:1px solid var(--edge);
-  border-radius:4px; padding:3px 9px; background:rgba(242,181,68,.08); white-space:nowrap;
-}
-.quest p{margin:10px 0 0; font-size:clamp(.85rem, 2.6vw, .95rem)}
-.quest .teaches{margin-top:10px; font-size:.78rem; color:var(--dim)}
-code{
-  color:var(--amber); background:rgba(242,181,68,.1);
-  padding:0 5px; border-radius:3px; font-family:var(--mono); font-size:.92em;
-}
-.play{
-  display:inline-block; margin-top:14px; font-weight:600; color:var(--oak);
-  background:var(--amber); border-radius:5px; padding:9px 18px; font-size:.9rem;
-}
-.quest.locked{opacity:.65}
-.quest.locked h3{color:var(--dim)}
-.soon{
-  display:inline-block; margin-top:14px; color:var(--dim); font-size:.85rem;
-  border:1px dashed var(--edge); border-radius:5px; padding:8px 16px;
-}
-footer{margin-top:28px; text-align:center; color:var(--dim); font-size:.75rem; max-width:46rem}
-footer a{color:var(--dim)}
-@media (prefers-reduced-motion:reduce){ .quest{transition:none} }
-</style>
+<link rel="stylesheet" href="./assets/css/site.css">
 </head>
-<body>
+<body class="quest-board">
 
 <header>
   <h1>⚔ Squires of Linux ⚔</h1>

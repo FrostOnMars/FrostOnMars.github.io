@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
+<title>Bird of the Belltower</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="./assets/css/site.css">
+</head>
+<body class="adventure tower-adventure">
+<header>
+  <h1>Bird of the Belltower</h1>
+  <span id="status">Quest II</span>
+  <a href="./index.html">Quest board</a>
+</header>
+<main class="frame">
+  <div id="out" role="log" aria-live="polite" aria-label="Adventure"></div>
+  <div class="keys" aria-label="Quick keys">
+    <button type="button" data-key="tab">⇥ Tab</button>
+    <button type="button" data-key="up">↑</button>
+    <button type="button" data-command="ls">ls</button>
+    <button type="button" data-command="cd ..">cd ..</button>
+    <button type="button" data-command="hint">hint</button>
+  </div>
+  <form id="form" autocomplete="off">
+    <label id="prompt" for="cmd"></label>
+    <input id="cmd" aria-label="Type a command" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send">
+  </form>
+</main>
+<footer>Type a command, then press Enter. Tap a golden command to type it. Tab finishes names; ↑ recalls commands.</footer>
+<script src="./assets/js/terminal.js" defer></script>
+<script src="./assets/js/bird-of-the-belltower.js" defer></script>
+</body>
+</html>
