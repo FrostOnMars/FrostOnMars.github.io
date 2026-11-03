@@ -21,20 +21,19 @@ Reward: a real knight's sword.
 ============================
 
 Follow the smell of fresh bread!
-Type:  \`cd bakery\``, 1),
+Type: \`cd bakery\``, 1),
 
   bakery: D({
     'baker_hilda.txt': F(
 `Hilda the Baker wipes flour off her hands.
 
-"A green hood? Yes! Someone in a green hood bumped my table
-and ran off with a loaf AND something shiny under their cloak.
+"A green hood? Yes! Someone in a green hood bumped my table and ran off with a loaf AND something shiny under their cloak.
 They ran toward the sound of the hammer. Hear that CLANG! CLANG!?
 That's the BLACKSMITH."
 
-To go back out to the square, type  \`cd ..\`
+To go back out to the square, type \`cd ..\`
 (Two dots mean "the room I came from.")
-Then try  \`cd blacksmith\``, 2,
+Then try \`cd blacksmith\``, 2,
 `Hilda dusts flour from her apron and points at a peeling sign on the wall.
 "Have you heard the news, dear? Here, take a loaf. And read that before your bread gets cold!"`),
     'fresh_bread.txt': F(
@@ -47,11 +46,10 @@ One loaf is missing. Somebody was hungry... and sneaky.`)
 `Bram the Blacksmith stops hammering. Sparks fly from his ANVIL.
 (An anvil is a heavy iron block for hammering metal on.)
 
-"Aye, some lad in a green hood ran right past my forge,
-heading for the horses. Can't be him, can it? Try the STABLES. I heard a ruckus that way."
+"Aye, some lad in a green hood ran right past my forge, heading for the horses. Can't be him, can it? Try the STABLES. I heard a ruckus that way."
 
-Go back with  \`cd ..\`  and then  \`cd stables\`
-Or do it in one step:  \`cd ../stables\``, 3,
+Go back with \`cd ..\` and then \`cd stables\`
+Or do it in one step: \`cd ../stables\``, 3,
 `Bram lowers his hammer and points at a peeling sign on the wall.
 
 "CLANG! Heard the news, squire? They're offering a knight's sword to whoever catches that thief everyone's talking about."
@@ -65,53 +63,45 @@ He points to a soot-blackened sign on the wall.`),
     'farmhand_tilly.txt': F(
 `Tilly the Farmhand is stacking watermelons bigger than your head.
 
-"Looking for Farmer Odo? You JUST missed him! Selling melons all
-morning made him thirsty, so he's taking a break at the TAVERN."
+"Looking for Farmer Odo? You JUST missed him! Selling melons all morning made him thirsty, so he's taking a break at the TAVERN."
 
-Go find him:  \`cd ..\`  then  \`cd tavern\``, 4,
+Go find him: \`cd ..\` then \`cd tavern\``, 4,
 `Tilly steadies a wobbly watermelon and points at a peeling sign on the wall.
 "Have you heard the news? It's juicier than these melons! Take a look!"`),
     'apples.txt': F(
 `Red apples, green apples, and one very wormy apple. Yuck.`),
     'watermelons.txt': F(
-`A mountain of fat green watermelons. One of them has a big bite
-taken right out of it. A sneaky, thief-sized bite. Hmm...`)
+`A mountain of fat green watermelons. One of them has a big bite taken right out of it. A sneaky, thief-sized bite. Hmm...`)
   }),
 
   tavern: D({
     'barkeep_mags.txt': F(
-`Mags the Barkeep polishes a mug. (A TAVERN is an inn where
-travelers eat, drink, and rest.)
+`Mags the Barkeep polishes a mug. (A TAVERN is an inn where travelers eat, drink, and rest.)
 
-"No green hoods in here today, love. But if you're after Farmer
-Odo, he's in the corner booth resting his feet.
+"No green hoods in here today, love. But if you're after Farmer Odo, he's in the corner booth resting his feet.
 And don't go poking about in my cellar!"`, undefined,
 `Mags polishes a mug and points at a peeling sign on the wall.
 "Have you heard the news, love? Everyone's talking about that sign!"`),
     'farmer_odo.txt': F(
 `Farmer Odo sips cider in the corner booth, boots up on a stool.
 
-"The barn? Aye, I locked it — can't have strangers spooking my
-horses. Wait... a THIEF might be hiding in there?! Then hurry,
-take my IRON KEY! It's right there on the table.
+"The barn? Aye, I locked it — can't have strangers spooking my horses. Wait... a THIEF might be hiding in there?! Then hurry, take my IRON KEY! It's right there on the table.
 
-A good squire keeps treasures in a BAG. In Linux, a bag is just
-a directory that you make yourself!"
+A good squire keeps treasures in a BAG. In Linux, a bag is just a directory that you make yourself!"
 
 Step 1 - make your bag:     \`mkdir ~/inventory\`
 Step 2 - pick up the key:   \`mv iron_key ~/inventory\`
          (mv means MoVe: it moves a file into a directory)
 Step 3 - peek in your bag:  \`ls ~/inventory\`
 
-Then march to the barn:  \`cd ~/stables\``, 5,
+Then march to the barn: \`cd ~/stables\``, 5,
 `Odo wipes sweat off his brow and points at a peeling sign on the wall.
 "Hello, squire! Heard the news? I've been too busy with the melons, but they say a thief's about!"`),
     'iron_key': F(
-`A heavy iron key, cold and a little rusty. It must open the
-big barn doors at the STABLES.
+`A heavy iron key, cold and a little rusty. It must open the big barn doors at the STABLES.
 
-Pick it up with:  \`mv iron_key ~/inventory\`
-(No bag yet? Make one first:  \`mkdir ~/inventory\`)`),
+Pick it up with: \`mv iron_key ~/inventory\`
+(No bag yet? Make one first: \`mkdir ~/inventory\`)`),
     cellar: D({
       'barrels.txt': F(
 `It's dark and cool down here. Just barrels of apple cider.
@@ -128,7 +118,7 @@ Type \`cd ~\` to zoom all the way home to the market square.`)
 That's that room high up under the roof where we keep the hay.
 I think someone is up there!"
 
-Type  \`ls\`  to look for the way up.`, 6,
+Type \`ls\` to look for the way up.`, 6,
 `Pip twists a handful of hay and points at a peeling sign on the wall.
 "Have you heard the news? Even the horses seem worried! Read that sign!"`),
     'horse.txt': F(
@@ -139,11 +129,10 @@ Type  \`ls\`  to look for the way up.`, 6,
 
 But wait. The hay just MOVED.
 
-Sneaky things like to HIDE. In Linux, hidden files have names
-that start with a dot, like .secret
+Sneaky things like to HIDE. In Linux, hidden files have names that start with a dot, like .secret
 Plain ls won't show them. You need to ask for ALL files.
 
-Type:  \`ls -a\``, 7),
+Type: \`ls -a\``, 7),
       '.thief': F('', 'win')
     })
   })
@@ -208,27 +197,20 @@ function updateLog(){
 // ---------- Room flavor ----------
 const FLAVOR = {
   square:{
-    first:`You stand in the heart of the MARKET SQUARE. Carts rattle over the
-cobblestones, a juggler drops his pins, pigeons scatter, and merchants
-shout about bread, apples, and horseshoes. Somewhere out there, a thief
-in a green hood is hiding with the King's goblet.`,
+    first:`You stand in the heart of the MARKET SQUARE. Carts rattle over the cobblestones, a juggler drops his pins, pigeons scatter, and merchants shout about bread, apples, and horseshoes. Somewhere out there, a thief in a green hood is hiding with the King's goblet.`,
     back:'You weave through the crowd, back in the busy MARKET SQUARE.',
     nudge:'Look around with `ls`.'},
   bakery:{
-    first:`You step into the BAKERY. Warm air hugs you like a blanket, and the
-smell of fresh bread makes your tummy growl. Flour dusts the floor
-like snow — and wait... are those floury FOOTPRINTS running out the door?`,
+    first:`You step into the BAKERY. Warm air hugs you like a blanket, and the smell of fresh bread makes your tummy growl. Flour dusts the floor like snow — and wait... are those floury FOOTPRINTS running out the door?`,
     back:'Back in the warm bakery. Hilda gives you a floury wave.',
     nudge:'Someone in here may have seen the thief. Type `ls` to see who is around.'},
   blacksmith:{
-    first:`You duck into the BLACKSMITH's shop. CLANG! CLANG! Sparks leap like
-tiny orange fireflies, and the air is hot enough to toast bread.
+    first:`You duck into the BLACKSMITH's shop. CLANG! CLANG! Sparks leap like tiny orange fireflies, and the air is hot enough to toast bread.
 Swords and horseshoes glitter on the walls in the firelight.`,
     back:'Back in the hot, noisy blacksmith\'s shop. CLANG! CLANG!',
     nudge:'Type `ls` to see who is here.'},
   fruit_stall:{
-    first:`You reach the FRUIT STALL. Apples are stacked in wobbly red-and-green
-pyramids, and watermelons sit in a pile like sleeping cannonballs.
+    first:`You reach the FRUIT STALL. Apples are stacked in wobbly red-and-green pyramids, and watermelons sit in a pile like sleeping cannonballs.
 Tilly the Farmhand is heaving them about, puffing and sweating.`,
     back:'Back at the fruit stall. Tilly waves between watermelon lifts.',
     nudge:'Type `ls` to see who is here.'},
@@ -239,26 +221,20 @@ In the corner booth, a farmer with muddy boots sips a mug of cider.`,
     back:'Back in the cozy tavern. The fire pops and crackles.',
     nudge:'Type `ls` to see who is here.'},
   cellar:{
-    first:`You creep down the stone steps into the dark CELLAR (a room under
-the ground). It is cool and quiet, and your footsteps echo. Big round
-barrels line the walls like a row of sleeping giants.`,
+    first:`You creep down the stone steps into the dark CELLAR (a room under the ground). It is cool and quiet, and your footsteps echo. Big round barrels line the walls like a row of sleeping giants.`,
     back:'Down in the dark, echoey cellar again. Drip... drip...',
     nudge:'Type `ls` to look around.'},
   stables:{
-    first:`You walk into the STABLES. It smells of hay and horses. Hooves stamp,
-tails swish — and every single horse is staring nervously at the
-ceiling. Something up there has spooked them.`,
+    first:`You walk into the STABLES. It smells of hay and horses. Hooves stamp, tails swish — and every single horse is staring nervously at the ceiling. Something up there has spooked them.`,
     back:'Back in the stables. The horses are STILL staring at the ceiling.',
     nudge:'Type `ls` to see who is here.'},
   hayloft:{
-    first:`You climb the wooden ladder up, up, up into the HAYLOFT. Golden dust
-floats in the sunbeams, and hay is piled higher than your head.
+    first:`You climb the wooden ladder up, up, up into the HAYLOFT. Golden dust floats in the sunbeams, and hay is piled higher than your head.
 It is very quiet up here... almost TOO quiet. Was that a tiny sneeze?`,
     back:'Up in the dusty hayloft again. Something rustles in the hay.',
     nudge:'Search the hay: type `ls` to look around.'},
   inventory:{
-    first:`You open the flap of your INVENTORY bag and peek inside. It smells
-of new leather. Anything you \`mv\` in here goes with you everywhere.`,
+    first:`You open the flap of your INVENTORY bag and peek inside. It smells of new leather. Anything you \`mv\` in here goes with you everywhere.`,
     back:'You rummage around inside your inventory bag.',
     nudge:'Type `ls` to see what you are carrying, and `cd ~` to climb back out.'}
 };
@@ -293,8 +269,7 @@ function tryUnlock(){
   const inv = FS.children['inventory'];
   if(inv && inv.type==='dir' && inv.children['iron_key']){
     unlocked = true;
-    print(`You pull the heavy IRON KEY out of your inventory bag and slide it
-into the lock. CLUNK! The big barn doors creak open.`,'story');
+    print(`You pull the heavy IRON KEY out of your inventory bag and slide it into the lock. CLUNK! The big barn doors creak open.`,'story');
     return true;
   }
   sawLocked = true;
@@ -392,7 +367,7 @@ Read it: \`cat ${parts.length===cwd.length && parts.every((part,index)=>part===c
         'hint'
       );
     }
-    if(all && parts.join('/')==='stables/hayloft' && !won){ print(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief:  \`cat ${cwd.join('/')==='stables/hayloft' ? '.thief' : '~/stables/hayloft/.thief'}\``,'hint'); }
+    if(all && parts.join('/')==='stables/hayloft' && !won){ print(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief: \`cat ${cwd.join('/')==='stables/hayloft' ? '.thief' : '~/stables/hayloft/.thief'}\``,'hint'); }
   },
   cd(args){
     const arg = args[0];
@@ -653,14 +628,11 @@ A reminder to be brave, kind, and protect those who need your help.`);
   print(
 `You pull back the hay...
 
-There, curled up with a loaf of bread, is a skinny kid in a
-GREEN HOOD, holding the King's SILVER GOBLET!
+There, curled up with a loaf of bread, is a skinny kid in a GREEN HOOD, holding the King's SILVER GOBLET!
 
-"Aw, rats," says Wren the Pickpocket. "Nobody EVER finds the
-hidden files."
+"Aw, rats," says Wren the Pickpocket. "Nobody EVER finds the hidden files."
 
-Wren hands back the goblet and promises to work at the bakery
-to pay Hilda back for the bread.`,'story');
+Wren hands back the goblet and promises to work at the bakery to pay Hilda back for the bread.`,'story');
   print('★  QUEST COMPLETE!  You caught the Market Thief!  ★','win');
   print(
 `The King smiles. "A promise is a promise, brave squire!"
@@ -696,8 +668,8 @@ document.getElementById('f').addEventListener('submit', e=>{
   commandHistory.add(line);
   const [c, ...args] = line.split(/\s+/);
   if(CMDS[c]){ used.add(c); CMDS[c](args); updateLog(); }
-  else if(c==='cd..' || c==='cd~'){ print(`Almost! Put a space after cd, like this:  \`${c.slice(0,2)} ${c.slice(2)}\``,'hint'); }
-  else if(c==='ls-a' || c==='ls-la' || c==='ls-al'){ print('Almost! Put a space after ls, like this:  `ls -a`','hint'); }
+  else if(c==='cd..' || c==='cd~'){ print(`Almost! Put a space after cd, like this: \`${c.slice(0,2)} ${c.slice(2)}\``,'hint'); }
+  else if(c==='ls-a' || c==='ls-la' || c==='ls-al'){ print('Almost! Put a space after ls, like this: `ls -a`','hint'); }
   else if(CMDS[c.toLowerCase()]) print(`bash: ${c}: command not found\nCommands are lowercase. Try \`${c.toLowerCase()}\``,'err');
   else print(`bash: ${c}: command not found\nType \`help\` to see the commands you can use.`,'err');
   out.scrollTop = out.scrollHeight;
@@ -728,9 +700,8 @@ print('⚔  THE MARKET THIEF  ⚔', 'title');
 print(
 `Welcome to LINUX, a thriving realm of bustling markets, secret passages, and adventures waiting around every corner.
 
-You are a SQUIRE:  a young adventurer training to become a knight.
-One day, you hope to earn that title. Until then, you must prove
-your courage, kindness, and clever thinking.
+You are a SQUIRE: a young adventurer training to become a knight.
+One day, you hope to earn that title. Until then, you must prove your courage, kindness, and clever thinking.
 Today, your adventure begins in the market square.
 
 A sealed scroll waits at your feet. Your name is on it!`,

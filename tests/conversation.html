@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Conversation Test</title>
+<link rel="stylesheet" href="../assets/css/site.css">
+</head>
+<body class="adventure tower-adventure muted-command-echoes">
+<header>
+  <h1>Conversation Test</h1>
+  <a href="../index.html">Quest board</a>
+</header>
+<main class="frame">
+  <div id="out" role="log" aria-live="polite" aria-label="Conversation test"></div>
+  <form id="form" autocomplete="off">
+    <label id="prompt" for="cmd">test$</label>
+    <input id="cmd" aria-label="Type an answer or command" autocapitalize="off" autocorrect="off" spellcheck="false">
+  </form>
+</main>
+<footer>Testing stub, not a quest. Type a number, answer Y/N, or click a choice. Commands: demo, hint, clear.</footer>
+<script src="../assets/js/terminal.js" defer></script>
+<script src="./conversation.js" defer></script>
+</body>
+</html>
