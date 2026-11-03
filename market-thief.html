@@ -137,13 +137,16 @@ One loaf is missing. Somebody was hungry... and sneaky.`)
 `Bram the Blacksmith stops hammering. Sparks fly from his ANVIL.
 (An anvil is a heavy iron block for hammering metal on.)
 
-"Green hood, you say? Ran right past my forge,
-heading for the horses. Try the STABLES. I swear I heard a ruckus back there!"
+"Aye, some lad in a green hood ran right past my forge,
+heading for the horses. Can't be him, can it? Try the STABLES. I heard a ruckus that way."
 
 Go back with  \`cd ..\`  and then  \`cd stables\`
 Or do it in one step:  \`cd ../stables\``, 3,
 `Bram lowers his hammer and points at a peeling sign on the wall.
-"CLANG! Heard the news, squire? That sign has the story!"`),
+
+"CLANG! Heard the news, squire? They're offering a knight's sword to whoever catches that thief everyone's talking about."
+
+He points to a soot-blackened sign on the wall.`),
     'anvil.txt': F(
 `A big black anvil. It is too heavy to lift, even for a knight.`)
   }),
@@ -784,7 +787,16 @@ You tuck your reward safely into your inventory bag.`,
   ls, ls -a, cd, cat, pwd, mkdir, and mv.
 They work the exact same way in a real terminal.
 
-Type \`restart\` to play again.`,'hint');
+Your next assignment awaits: Bird of the Belltower.
+Choose Quest II on the quest board, or type \`restart\` to play again.`,'hint');
+  const nextQuest = document.createElement('div');
+  const link = document.createElement('a');
+  link.href = './bird-of-the-belltower.html';
+  link.textContent = 'Continue to Quest II: Bird of the Belltower';
+  link.style.color = 'var(--amber)';
+  nextQuest.appendChild(link);
+  out.appendChild(nextQuest);
+  out.scrollTop = out.scrollHeight;
 }
 
 // ---------- Input handling ----------
