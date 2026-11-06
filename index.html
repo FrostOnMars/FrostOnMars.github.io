@@ -3,53 +3,97 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Mikayla Martin | Developer Portfolio</title>
+  <meta name="description" content="Mikayla Martin is an IT professional and developer building useful things for a curious world.">
+  <title>Mikayla Martin | FrostOnMars</title>
+  <link rel="stylesheet" href="./assets/css/portfolio.css">
 </head>
 <body>
-
-    <header>
-        <h1>Mikayla Martin</h1>
-        <p class="subtitle">IT Professional · Developer · Problem Solver</p>
-    </header>
-
-    <nav>
-        <a href="projects.html">Projects</a>
-        <a href="https://github.com/FrostOnMars">GitHub</a>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header" id="home">
+    <nav class="nav wrap" aria-label="Main navigation">
+      <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">✦</span> FrostOnMars</a>
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#about">About</a>
+        <a class="nav-github" href="https://github.com/FrostOnMars">GitHub ↗</a>
+      </div>
     </nav>
+  </header>
 
-    <main>
-        <h2>I build tools for problems worth automating.</h2>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">Developer · Problem solver · Curious human</p>
+        <h1 id="hero-title">Hi, I'm Mikayla.<br>Let's make <em>good things.</em></h1>
+        <p class="intro">I build tools for problems worth automating.</p>
+        <div class="actions">
+          <a class="button" href="#portfolio">Explore my work <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="#about">A little about me ↓</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <img class="hero-stars" src="./assets/images/stars-scrib.png" alt="">
+        <div class="orbit">
+          <img class="portrait" src="./assets/images/profile-photo.png" alt="Illustrated portrait of Mikayla Martin">
+          <span class="orbit-label">✦ &nbsp; Hello from my orbit</span>
+        </div>
+        <img class="hero-saturn" src="./assets/images/saturn-scrib.png" alt="">
+        <img class="hero-planet" src="./assets/images/planet-scrib.png" alt="">
+      </div>
+    </section>
 
-        <p>
-            My primary background is IT support, but software development
-            has become an important part of how I solve problems.
-        </p>
+    <section class="section work-section wrap" id="portfolio" aria-labelledby="portfolio-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">A few things in my orbit</p>
+          <h2 id="portfolio-title">Things I've made.</h2>
+        </div>
+        <p class="section-note">A little corner of the internet for projects, experiments, and ideas brought to life.</p>
+      </div>
+      <div class="work-grid">
+        <article class="card card-feature">
+          <div class="card-content">
+            <p class="card-kicker">Featured project · Learning &amp; play</p>
+            <h3>Squires of Linux</h3>
+            <p>Medieval adventures that help curious kids learn real Linux commands.</p>
+            <a class="text-link" href="./Squires.html">Visit the quest board ↗</a>
+          </div>
+          <img class="card-moon" src="./assets/images/moon-scrib.png" alt="">
+        </article>
+        <article class="card card-github">
+          <div class="card-content">
+            <p class="card-kicker">More to explore · GitHub</p>
+            <h3>The rest of the universe.</h3>
+            <p>Explore more of what I'm building and learning on GitHub.</p>
+            <a class="text-link" href="https://github.com/FrostOnMars">Find me on GitHub ↗</a>
+          </div>
+          <img class="card-nebula" src="./assets/images/nebula-scrib.png" alt="">
+        </article>
+      </div>
+    </section>
 
-        <p>
-            When repetitive, error-prone, or technically difficult work
-            gets in the way, I build tools to make it faster, safer, and
-            more accurate.
-        </p>
+    <section class="section about-section" id="about" aria-labelledby="about-title">
+      <div class="about-layout wrap">
+        <div>
+          <p class="eyebrow">The person behind the pixels</p>
+          <h2 id="about-title">A little about me.</h2>
+          <img class="about-art" src="./assets/images/rocket-scrib.png" alt="">
+        </div>
+        <div class="about-copy">
+          <p>I'm Mikayla, an IT professional and developer who likes making complicated things a little simpler.</p>
+          <p>My background is in IT support, and I build software to make repetitive, error-prone, or technically difficult work faster, safer, and more accurate. My projects span automation, APIs, databases, and web and desktop applications.</p>
+          <a class="text-link" href="https://github.com/FrostOnMars">Say hello on GitHub ↗</a>
+        </div>
+      </div>
+    </section>
+  </main>
 
-        <p>
-            My projects span automation, APIs, databases, synchronization,
-            search, data reconciliation, deployment tooling, desktop and
-            web applications, and AI-assisted development.
-        </p>
-
-        <p>
-            <a href="projects.html"><strong>View my projects →</strong></a>
-        </p>
-
-		        <p>
-            <a href="./Squires.html"><strong>Or view my Squires of Linux page here →</strong></a>
-        </p>
-
-    </main>
-
-    <footer>
-        <p>I don't write PowerShell scripts. I negotiate hostage releases with Microsoft APIs.</p>
-    </footer>
-
+  <footer>
+    <div class="footer-inner wrap">
+      <p>Made with curiosity, by Mikayla Martin <span aria-hidden="true">✦</span></p>
+      <a href="#home">Back to the top ↑</a>
+    </div>
+  </footer>
 </body>
 </html>
