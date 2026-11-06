@@ -4,7 +4,7 @@ Medieval adventures for curious kids aged **8-10**, where real Linux commands
 help solve mysteries and save the day. No installs, accounts, or Linux experience
 needed. Play in a browser on desktop or mobile.
 
-**[Choose your adventure](https://frostonmars.github.io/)**
+**[Choose your adventure](https://frostonmars.github.io/Squires.html)**
 
 ## Two quests to explore
 
