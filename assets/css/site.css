@@ -117,12 +117,15 @@ a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: tr
 .win { color: var(--amber); font-weight: bold; }
 .adventure code { cursor: pointer; }
 .keys { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px 14px; border-top: 1px dashed var(--edge); }
-.keys button, .conversation-options button { font: inherit; color: var(--amber); background: #f2b54414; border: 1px solid var(--edge); border-radius: 4px; padding: 6px 12px; min-height: 36px; cursor: pointer; }
+.keys button, .conversation-options button, .enter-command { font: inherit; color: var(--amber); background: #f2b54414; border: 1px solid var(--edge); border-radius: 4px; padding: 6px 12px; min-height: 36px; cursor: pointer; }
+.enter-command { flex-shrink: 0; min-height: 44px; }
+.enter-command:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 .conversation-options { display: flex; flex-wrap: wrap; gap: 8px; }
 .conversation-options button { max-width: 100%; text-align: left; overflow-wrap: anywhere; }
 .conversation-options button:disabled { opacity: .5; cursor: default; }
 .conversation-options button:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
-.adventure form { display: flex; align-items: center; gap: 8px; padding: 8px 14px 12px; }
+.adventure form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 14px 12px; }
+.command-entry { display: flex; flex: 1 1 24ch; min-width: 0; align-items: center; gap: 8px; }
 #prompt { color: var(--amber); overflow-wrap: anywhere; }
 #cmd { flex: 1; min-width: 0; background: transparent; border: 0; color: var(--ink); font: 16px var(--mono); }
 .adventure form:focus-within { background: #f2b54408; }

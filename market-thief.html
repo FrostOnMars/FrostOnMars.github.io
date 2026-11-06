@@ -30,10 +30,13 @@
   </div>
   <form id="f" autocomplete="off">
     <label id="prompt" for="cmd">squire@market:~$</label>
-    <input id="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Type a command">
+    <div class="command-entry">
+      <input id="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Type a command">
+      <button type="submit" class="enter-command">Enter</button>
+    </div>
   </form>
 </div>
-<div class="foot">Tip: <b>Tab</b> (or the <b>⇥</b> button) finishes a name, <b>↑</b> brings back your last command, and tapping any golden command types it for you. Tab and ↑ work in a real terminal too.</div>
+<div class="foot">Type a command, then press or click <b>Enter</b>. Tip: <b>Tab</b> (or the <b>⇥</b> button) finishes a name, <b>↑</b> brings back your last command, and tapping any golden command types it for you. Tab and ↑ work in a real terminal too.</div>
 
 <script src="./assets/js/terminal.js" defer></script>
 <script src="./assets/js/market-thief.js" defer></script>

@@ -25,10 +25,13 @@
   </div>
   <form id="form" autocomplete="off">
     <label id="prompt" for="cmd"></label>
-    <input id="cmd" aria-label="Type a command" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send">
+    <div class="command-entry">
+      <input id="cmd" aria-label="Type a command" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send">
+      <button type="submit" class="enter-command">Enter</button>
+    </div>
   </form>
 </main>
-<footer>Type a command, then press Enter. Tap a golden command to type it. Tab finishes names; ↑ recalls commands.</footer>
+<footer>Type a command, then press or click Enter. Tap a golden command to type it. Tab finishes names; ↑ recalls commands.</footer>
 <script src="./assets/js/terminal.js" defer></script>
 <script src="./assets/js/bird-of-the-belltower.js" defer></script>
 </body>

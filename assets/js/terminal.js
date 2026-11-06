@@ -293,6 +293,7 @@ const Terminal = (() => {
   }
 
   function bindControls({input, out, keys, complete, previous, next, runCommand}){
+    input.form.addEventListener('submit',()=>{ input.focus(); });
     input.addEventListener('keydown',event=>{
       if(event.key==='Tab'){ event.preventDefault(); complete(); }
       else if(event.key==='ArrowUp'){ event.preventDefault(); previous(); }

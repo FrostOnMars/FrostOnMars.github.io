@@ -14,14 +14,17 @@ needed. Play in a browser on desktop or mobile.
   `ls`, `cd`, `cat`, `pwd`, `mkdir`, and `mv`. Discover hidden files with `ls -a`
   and earn a knight's sword.
 - **[Bird of the Belltower](https://frostonmars.github.io/bird-of-the-belltower.html)**:
-  Ring the tournament bell, if you can recover its clapper from a mischievous
-  bird! Build on the first quest with text searches (`grep`, `grep -i`),
+  Find a way past Bramble the old guard dog, steady a crumbling tower, and
+  rescue a mischievous bird before ringing the tournament bell!
+  Build on the first quest with text searches (`grep`, `grep -i`),
   executable permissions (`chmod +x`), and running scripts (`./script.sh`).
+  Discover clever, kind, or optional magical solutions along the way.
 
 ## Friendly practice, not a real computer terminal
 
-Kids type commands, explore at their own pace, and use `hint` whenever they need
-a nudge. Golden commands can be tapped to type them; Tab finishes names and the
+Kids type commands and press or click **Enter** to send them, explore at their
+own pace, and use `hint` whenever they need a nudge.
+Golden commands can be tapped to type them; Tab finishes names and the
 up arrow recalls previous commands.
 
 The games teach a guided selection of real Linux command forms in a simulated
