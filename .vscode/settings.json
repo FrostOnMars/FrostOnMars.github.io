@@ -1,0 +1,11 @@
+{
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  },
+  // Stylelint checks CSS; the built-in checker would report duplicate warnings.
+  "css.validate": false,
+  "stylelint.validate": ["css"]
+}
