@@ -6,7 +6,7 @@
   align-items: center;
   gap: 30px;
   min-height: 620px;
-  padding-block: 70px 90px;
+  padding-block: var(--space-8) var(--space-9);
 }
 
 .hero-copy {
@@ -16,7 +16,7 @@
 
 .intro {
   max-width: 470px;
-  margin: 26px 0 30px;
+  margin:var(--space-5) 0 var(--space-6);
   color: var(--text-muted);
   font-size: var(--text-lg);
 }
@@ -60,7 +60,7 @@
   display: inline-flex;
   align-items: center;
   gap: .6em;
-  padding: 9px 15px;
+  padding: var(--space-2) var(--space-4);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-pill);
   background: var(--surface-page);
@@ -84,7 +84,7 @@
 }
 
 .hero-saturn {
-  top: var(--space-1);
+  top: 4px;
   right: -14px;
   width: 150px;
   transform: rotate(12deg);
@@ -105,12 +105,12 @@
   display: flex;
   justify-content: space-between;
   align-items: end;
-  gap: 24px;
-  margin-bottom: 34px;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
 }
 
 .section-heading .eyebrow {
-  margin-bottom: 12px;
+  margin-bottom: var(--space-2);
 }
 
 .section-note {
@@ -128,7 +128,7 @@
 .work-grid {
   display: grid;
   grid-template-columns: 1.15fr .85fr;
-  gap: 20px;
+  gap: var(--space-5);
 }
 
 .card-moon {
@@ -153,7 +153,7 @@
   display: grid;
   grid-template-columns: .8fr 1.2fr;
   align-items: start;
-  gap: 60px;
+  gap: var(--space-8);
 }
 
 .about-copy {
@@ -171,14 +171,14 @@
 
 .about-art {
   width: 130px;
-  margin-top: 25px;
+  margin-top: var(--space-5);
 }
 
 @media (max-width: 760px) {
   .hero {
     grid-template-columns: 1fr;
     gap: 10px;
-    padding-block: 70px 55px;
+    padding-block: var(--space-8) var(--space-7);
   }
 
   .hero-art {
@@ -208,12 +208,12 @@
   }
 
   .about-layout {
-    gap: 28px;
+    gap: var(--space-6);
   }
 
   .about-art {
     width: 100px;
-    margin-top: 10px;
+    margin-top: var(--space-2);
   }
 }
 
