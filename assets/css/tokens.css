@@ -1,21 +1,52 @@
 :root {
   color-scheme: light;
+
+  /* Color */
   --text-primary: #32223d;
   --text-muted: #625464;
   --text-on-action: #fff;
-  --text-accent: #88536e; /* Eyebrows and card kickers */
-  --heading-accent: #a64c63; /* Emphasized hero heading */
-  --action-accent: #bd4d58; /* Focus, hover, and brand mark */
+  --text-accent: #88536e;
+  --heading-accent: #a64c63;
+  --action-accent: #bd4d58;
+  --action-primary: #4a2d50;
+  --action-primary-hover: #654469;
   --surface-page: #fcf8f6;
-  --surface-raised: #fff; /* Skip link */
+  --surface-raised: #fff;
   --surface-feature: #ebd9e8;
   --surface-warm: #f3e7e1;
   --surface-tint: #f1e4ef;
   --border-soft: #d5b8d0;
-  --action-primary: #4a2d50;
-  --action-primary-hover: #654469;
-  --shadow-portrait: #5135511a;
+  --shadow-soft: #5135511a;
+
+  /* Typography */
+  --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: Georgia, "Times New Roman", serif;
+  --leading-body: 1.65;
+  --leading-tight: 1.08;
+  --text-xs: .7rem;
+  --text-sm: .8rem;
+  --text-md: .875rem;
+  --text-base: 1rem;
+  --text-lg: 1.05rem;
+  --text-h1: clamp(3.4rem, 6.4vw, 6rem);
+  --text-h2: clamp(2.5rem, 4vw, 3.8rem);
+  --text-h3: 2rem;
+
+  /* Shape */
   --radius-card: 12px;
+  --radius-pill: 999px;
+
+  /* Layout and spacing */
+  --layout-wide: 1120px;
+  --layout-narrow: 760px;
+  --gutter: 24px;
   --space-section: 92px;
   --space-section-compact: 65px;
+}
+
+@media (max-width: 480px) {
+  :root {
+    --gutter: 16px;
+    --text-h1: clamp(3rem, 13vw, 4rem);
+  }
 }
