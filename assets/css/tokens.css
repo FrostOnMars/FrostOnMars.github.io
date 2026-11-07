@@ -30,9 +30,9 @@
   --font-display: Georgia, "Times New Roman", serif;
   --leading-body: 1.65;
   --leading-tight: 1.08;
-  --text-xs: .7rem;
-  --text-sm: .8rem;
-  --text-md: .875rem;
+  --text-xs: 0.7rem;
+  --text-sm: 0.8rem;
+  --text-md: 0.875rem;
   --text-base: 1rem;
   --text-lg: 1.05rem;
   --text-h1: clamp(3.4rem, 6.4vw, 6rem);

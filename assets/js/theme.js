@@ -5,7 +5,9 @@ const toggle = document.querySelector('.theme-toggle');
 const systemDark = window.matchMedia('(prefers-color-scheme: dark)');
 
 function isDark() {
-  return root.dataset.theme ? root.dataset.theme === 'dark' : systemDark.matches;
+  return root.dataset.theme
+    ? root.dataset.theme === 'dark'
+    : systemDark.matches;
 }
 
 function syncToggle() {

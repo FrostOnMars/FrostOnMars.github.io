@@ -2,7 +2,7 @@
 .hero {
   position: relative;
   display: grid;
-  grid-template-columns: 1.05fr .95fr;
+  grid-template-columns: 1.05fr 0.95fr;
   align-items: center;
   gap: 30px;
   min-height: 620px;
@@ -16,7 +16,7 @@
 
 .intro {
   max-width: 470px;
-  margin:var(--space-5) 0 var(--space-6);
+  margin: var(--space-5) 0 var(--space-6);
   color: var(--text-muted);
   font-size: var(--text-lg);
 }
@@ -59,14 +59,14 @@
   bottom: 38px;
   display: inline-flex;
   align-items: center;
-  gap: .6em;
+  gap: 0.6em;
   padding: var(--space-2) var(--space-4);
   border: 1px solid var(--border-soft);
   border-radius: var(--radius-pill);
   background: var(--surface-page);
   font-size: var(--text-xs);
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -127,7 +127,7 @@
 
 .work-grid {
   display: grid;
-  grid-template-columns: 1.15fr .85fr;
+  grid-template-columns: 1.15fr 0.85fr;
   gap: var(--space-5);
 }
 
@@ -141,7 +141,7 @@
   right: -12px;
   bottom: -10px;
   width: 185px;
-  opacity: .8;
+  opacity: 0.8;
 }
 
 /* About */
@@ -151,7 +151,7 @@
 
 .about-layout {
   display: grid;
-  grid-template-columns: .8fr 1.2fr;
+  grid-template-columns: 0.8fr 1.2fr;
   align-items: start;
   gap: var(--space-8);
 }

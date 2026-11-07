@@ -75,12 +75,12 @@ h3 {
 
 h1 {
   font-size: var(--text-h1);
-  letter-spacing: -.055em;
+  letter-spacing: -0.055em;
 }
 
 h2 {
   font-size: var(--text-h2);
-  letter-spacing: -.04em;
+  letter-spacing: -0.04em;
 }
 
 h3 {
@@ -108,7 +108,7 @@ h3 {
 
 @keyframes twinkle {
   from {
-    opacity: .3;
+    opacity: 0.3;
   }
 
   to {

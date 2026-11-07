@@ -1,52 +1,96 @@
 <!doctype html>
 <html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
-<title>The Market Thief</title>
-<meta name="description" content="Follow clues through a bustling market to recover the King's stolen goblet in a text adventure that teaches real Linux commands.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="The Market Thief">
-<meta property="og:description" content="Follow clues through a bustling market to recover the King's stolen goblet in a text adventure that teaches real Linux commands.">
-<meta property="og:url" content="https://frostonmars.github.io/market-thief.html">
-<meta property="og:image" content="https://frostonmars.github.io/assets/images/profile-photo.png">
-<meta name="twitter:card" content="summary">
-<link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
-<meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;600&display=swap">
-<link rel="stylesheet" href="./assets/css/squires.css">
-</head>
-<body class="adventure market-adventure muted-command-echoes">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"
+    />
+    <title>The Market Thief</title>
+    <meta
+      name="description"
+      content="Follow clues through a bustling market to recover the King's stolen goblet in a text adventure that teaches real Linux commands."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="The Market Thief" />
+    <meta
+      property="og:description"
+      content="Follow clues through a bustling market to recover the King's stolen goblet in a text adventure that teaches real Linux commands."
+    />
+    <meta
+      property="og:url"
+      content="https://frostonmars.github.io/market-thief.html"
+    />
+    <meta
+      property="og:image"
+      content="https://frostonmars.github.io/assets/images/profile-photo.png"
+    />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg" />
+    <meta name="claude:viewport-fit-sides" content="cover" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=JetBrains+Mono:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="./assets/css/squires.css" />
+  </head>
+  <body class="adventure market-adventure muted-command-echoes">
+    <header>
+      <h1>The Market Thief</h1>
+      <div class="log">
+        <span
+          >Clues <b id="clues">0/7</b><span class="pips" id="pips"></span
+        ></span>
+        <span>Commands used <b id="learned">0/8</b></span>
+      </div>
+    </header>
 
-<header>
-  <h1>The Market Thief</h1>
-  <div class="log">
-    <span>Clues <b id="clues">0/7</b><span class="pips" id="pips"></span></span>
-    <span>Commands used <b id="learned">0/8</b></span>
-  </div>
-</header>
-
-<div class="frame" id="frame">
-  <div id="out" aria-live="polite"></div>
-  <div class="keys" id="keys" aria-label="Quick keys">
-    <button type="button" data-k="tab" title="Finish the name, like the Tab key">⇥ Tab</button>
-    <button type="button" data-k="up" title="Bring back your last command, like the ↑ key">↑</button>
-    <button type="button" data-k="run" data-cmd="ls">ls</button>
-    <button type="button" data-k="run" data-cmd="cd ..">cd ..</button>
-    <button type="button" data-k="run" data-cmd="hint">hint</button>
-  </div>
-  <form id="f" autocomplete="off">
-    <label id="prompt" for="cmd">squire@market:~$</label>
-    <div class="command-entry">
-      <input id="cmd" type="text" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Type a command">
-      <button type="submit" class="enter-command">Enter</button>
+    <div class="frame" id="frame">
+      <div id="out" aria-live="polite"></div>
+      <div class="keys" id="keys" aria-label="Quick keys">
+        <button
+          type="button"
+          data-k="tab"
+          title="Finish the name, like the Tab key"
+        >
+          ⇥ Tab
+        </button>
+        <button
+          type="button"
+          data-k="up"
+          title="Bring back your last command, like the ↑ key"
+        >
+          ↑
+        </button>
+        <button type="button" data-k="run" data-cmd="ls">ls</button>
+        <button type="button" data-k="run" data-cmd="cd ..">cd ..</button>
+        <button type="button" data-k="run" data-cmd="hint">hint</button>
+      </div>
+      <form id="f" autocomplete="off">
+        <label id="prompt" for="cmd">squire@market:~$</label>
+        <div class="command-entry">
+          <input
+            id="cmd"
+            type="text"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+            enterkeyhint="send"
+            aria-label="Type a command"
+          />
+          <button type="submit" class="enter-command">Enter</button>
+        </div>
+      </form>
     </div>
-  </form>
-</div>
-<div class="foot">Type a command, then press or click <b>Enter</b>. Tip: <b>Tab</b> (or the <b>⇥</b> button) finishes a name, <b>↑</b> brings back your last command, and tapping any golden command types it for you. Tab and ↑ work in a real terminal too.</div>
+    <div class="foot">
+      Type a command, then press or click <b>Enter</b>. Tip: <b>Tab</b> (or the
+      <b>⇥</b> button) finishes a name, <b>↑</b> brings back your last command,
+      and tapping any golden command types it for you. Tab and ↑ work in a real
+      terminal too.
+    </div>
 
-<script src="./assets/js/terminal.js" defer></script>
-<script src="./assets/js/market-thief.js" defer></script>
-
-</body></html>
+    <script src="./assets/js/terminal.js" defer></script>
+    <script src="./assets/js/market-thief.js" defer></script>
+  </body>
+</html>
