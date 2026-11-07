@@ -201,10 +201,6 @@
     padding: 28px;
   }
 
-  .card-content {
-    max-width: 75%;
-  }
-
   .footer-inner {
     flex-direction: column;
     align-items: start;

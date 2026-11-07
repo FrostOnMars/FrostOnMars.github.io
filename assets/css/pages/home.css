@@ -84,7 +84,7 @@
 }
 
 .hero-saturn {
-  top: 5px;
+  top: var(--space-1);
   right: -14px;
   width: 150px;
   transform: rotate(12deg);
