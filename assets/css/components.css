@@ -70,6 +70,29 @@
   border-radius: var(--radius-pill);
 }
 
+/* Theme toggle */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid var(--border-soft);
+  border-radius: 50%;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.theme-toggle:is(:hover, :focus-visible) {
+  color: var(--action-accent);
+}
+
+.theme-toggle[aria-pressed="true"] .icon-moon,
+.theme-toggle[aria-pressed="false"] .icon-sun {
+  display: none;
+}
+
 /* Eyebrow label */
 .eyebrow {
   margin: 0 0 var(--space-5);
@@ -198,7 +221,7 @@
 
   .card {
     min-height: 250px;
-    padding: var(--space-6);
+    padding: var(--space-5);
   }
 
   .footer-inner {

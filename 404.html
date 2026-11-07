@@ -13,6 +13,12 @@
   <meta property="og:image" content="https://frostonmars.github.io/assets/images/profile-photo.png">
   <meta name="twitter:card" content="summary">
   <link rel="icon" type="image/svg+xml" href="./assets/images/favicon.svg">
+  <script>
+    try {
+      const theme = localStorage.getItem('theme');
+      if (theme) document.documentElement.dataset.theme = theme;
+    } catch {}
+  </script>
   <link rel="stylesheet" href="./assets/css/tokens.css">
   <link rel="stylesheet" href="./assets/css/base.css">
   <link rel="stylesheet" href="./assets/css/components.css">

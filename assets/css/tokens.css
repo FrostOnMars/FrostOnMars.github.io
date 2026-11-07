@@ -1,22 +1,29 @@
 :root {
-  color-scheme: light;
+  /* Follows the visitor's system setting until the theme toggle picks one. */
+  color-scheme: light dark;
 
-  /* Color */
-  --text-primary: #32223d;
-  --text-muted: #625464;
-  --text-on-action: #fff;
-  --text-accent: #88536e;
-  --heading-accent: #a64c63;
-  --action-accent: #bd4d58;
-  --action-primary: #4a2d50;
-  --action-primary-hover: #654469;
-  --surface-page: #fcf8f6;
-  --surface-raised: #fff;
-  --surface-feature: #ebd9e8;
-  --surface-warm: #f3e7e1;
-  --surface-tint: #f1e4ef;
-  --border-soft: #d5b8d0;
-  --shadow-soft: #5135511a;
+  /* Color: light-dark(light value, dark value) */
+  --text-primary: light-dark(#32223d, #f1e7f0);
+  --text-muted: light-dark(#625464, #bcadc0);
+  --text-on-action: light-dark(#fff, #2a1833);
+  --text-accent: light-dark(#88536e, #d9a3c4);
+  --heading-accent: light-dark(#a64c63, #f2a0b4);
+  --action-accent: light-dark(#bd4d58, #ff9aa2);
+  --action-primary: light-dark(#4a2d50, #e6c8ee);
+  --action-primary-hover: light-dark(#654469, #f4e0f7);
+  --surface-page: light-dark(#fcf8f6, #15101e);
+  --surface-raised: light-dark(#fff, #221a2e);
+  --surface-feature: light-dark(#ebd9e8, #2a1f37);
+  --surface-warm: light-dark(#f3e7e1, #2b1f2a);
+  --surface-tint: light-dark(#f1e4ef, #1e162acc);
+  --border-soft: light-dark(#d5b8d0, #4a3858);
+  --shadow-soft: light-dark(#5135511a, #00000066);
+
+  /* Night sky: transparent by day, so the layers only show in dark mode */
+  --star: light-dark(transparent, #fff8ec);
+  --star-dim: light-dark(transparent, #fff8ec80);
+  --nebula-violet: light-dark(transparent, #7b4fa833);
+  --nebula-rose: light-dark(transparent, #b8507a24);
 
   /* Typography */
   --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -51,7 +58,14 @@
   --space-7: 48px;
   --space-8: 64px;
   --space-9: 90px;
+}
 
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @media (max-width: 480px) {
