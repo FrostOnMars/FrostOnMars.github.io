@@ -1,0 +1,21 @@
+:root {
+  color-scheme: light;
+  --text-primary: #32223d;
+  --text-muted: #625464;
+  --text-on-action: #fff;
+  --text-accent: #88536e; /* Eyebrows and card kickers */
+  --heading-accent: #a64c63; /* Emphasized hero heading */
+  --action-accent: #bd4d58; /* Focus, hover, and brand mark */
+  --surface-page: #fcf8f6;
+  --surface-raised: #fff; /* Skip link */
+  --surface-feature: #ebd9e8;
+  --surface-warm: #f3e7e1;
+  --surface-tint: #f1e4ef;
+  --border-soft: #d5b8d0;
+  --action-primary: #4a2d50;
+  --action-primary-hover: #654469;
+  --shadow-portrait: #5135511a;
+  --radius-card: 12px;
+  --space-section: 92px;
+  --space-section-compact: 65px;
+}

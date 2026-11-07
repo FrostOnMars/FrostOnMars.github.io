@@ -1,0 +1,28 @@
+body { min-height: 100vh; display: grid; place-items: center; }
+.error-page {
+  width: min(760px, calc(100% - 48px));
+  margin-inline: auto;
+  padding-block: 4rem;
+  text-align: center;
+}
+.error-code {
+  margin: 0 0 1rem;
+  color: var(--text-accent);
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.error-page h1 { margin: 0 0 1rem; font-size: clamp(2.5rem, 8vw, 4.5rem); }
+.error-page p:not(.error-code) { max-width: 34rem; margin: 0 auto; color: var(--text-muted); }
+.crash-art {
+  display: inline-block;
+  max-width: 100%;
+  margin: 2rem auto;
+  overflow-x: auto;
+  color: var(--text-primary);
+  font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+  font-size: clamp(.7rem, 2vw, .875rem);
+  line-height: 1.2;
+  text-align: left;
+}
