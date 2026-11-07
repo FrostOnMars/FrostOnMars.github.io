@@ -174,7 +174,7 @@
   margin-top: var(--space-5);
 }
 
-@media (max-width: 760px) {
+@media (width <= 760px) {
   .hero {
     grid-template-columns: 1fr;
     gap: 10px;
@@ -217,7 +217,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .hero-art {
     min-height: 320px;
   }

@@ -1,0 +1,17 @@
+{
+  "name": "frostonmars-portfolio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . && stylelint \"**/*.css\" && prettier --check .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "stylelint": "^18.0.0",
+    "stylelint-config-standard": "^41.0.0"
+  }
+}

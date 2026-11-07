@@ -140,7 +140,6 @@ Type: \`ls -a\``, 7),
 
 // ---------- State ----------
 const freshBread = FS.children.bakery.children['fresh_bread.txt'];
-const HOME = [];
 let cwd = [];
 let clues = new Set();
 let used = new Set();
@@ -174,11 +173,11 @@ function pathError(result, path){
     NOT_DIRECTORY:`A scroll is blocking that path: ${path}. You can read files with cat; only directories hold other things.`,
     NOT_FOUND:`I couldn't find ${path}. Check the names with \`ls\`, or type \`hint\` for help.`
   };
-  print(messages[result.error],'err');
+  printLine(messages[result.error],'err');
   return true;
 }
-function print(text, cls='story'){
-  if(cls==='err'){ stuck++; if(stuck>=3){ stuck=0; setTimeout(()=>print('Feeling stuck? Type `hint` and I will point you the right way.','hint'),0); } }
+function printLine(text, cls='story'){
+  if(cls==='err'){ stuck++; if(stuck>=3){ stuck=0; setTimeout(()=>printLine('Feeling stuck? Type `hint` and I will point you the right way.','hint'),0); } }
   else if(cls==='story'||cls==='dim'||cls==='win'){ stuck=0; }
   const d = Terminal.render(out, input, text, cls + ' new', {
     commandTitle:'Tap to type this',
@@ -247,13 +246,13 @@ function enterRoom(){
     nudge:'Type `ls` to look around.'};
   const firstTime = !visited.has(here);
   visited.add(here);
-  print(firstTime ? f.first : f.back, firstTime ? 'story' : 'dim');
+  printLine(firstTime ? f.first : f.back, firstTime ? 'story' : 'dim');
   if(!used.has('cd-taught')){
     used.add('cd-taught');
-    print('cd means Change Directory. It moves you into another folder, like entering a new place.','hint');
-    print(f.nudge,'hint');
+    printLine('cd means Change Directory. It moves you into another folder, like entering a new place.','hint');
+    printLine(f.nudge,'hint');
   }
-  else if(firstTime && f.nudge) print(f.nudge,'hint');
+  else if(firstTime && f.nudge) printLine(f.nudge,'hint');
 }
 // ---------- The locked barn ----------
 function lockedPath(parts){ return !unlocked && parts && parts[0]==='stables'; }
@@ -269,19 +268,19 @@ function tryUnlock(){
   const inv = FS.children['inventory'];
   if(inv && inv.type==='dir' && inv.children['iron_key']){
     unlocked = true;
-    print(`You pull the heavy IRON KEY out of your inventory bag and slide it into the lock. CLUNK! The big barn doors creak open.`,'story');
+    printLine(`You pull the heavy IRON KEY out of your inventory bag and slide it into the lock. CLUNK! The big barn doors creak open.`,'story');
     return true;
   }
   sawLocked = true;
   if(!clues.has(5)){
-    print(`The big BARN DOORS are locked tight. A wooden sign hangs on the handle:
+    printLine(`The big BARN DOORS are locked tight. A wooden sign hangs on the handle:
 
    "Gone to sell watermelons at the FRUIT STALL.
     Back later!              — Farmer Odo"`,'story');
-    print('Farmer Odo must have the key. Find him: type `cd ~` then `cd fruit_stall`','hint');
+    printLine('Farmer Odo must have the key. Find him: type `cd ~` then `cd fruit_stall`','hint');
   } else {
-    print('You rattle the handle, but the big barn doors are still LOCKED tight.','story');
-    print('You need the IRON KEY inside your inventory bag. Type `hint` if you forget the steps.','hint');
+    printLine('You rattle the handle, but the big barn doors are still LOCKED tight.','story');
+    printLine('You need the IRON KEY inside your inventory bag. Type `hint` if you forget the steps.','hint');
   }
   return false;
 }
@@ -292,42 +291,42 @@ function pointToPoster(node){
   if(node.clue===2){
     if(!breadOffered){
       breadOffered = true;
-      print(node.news,'story');
-      print('Hilda hands you a warm loaf.','story');
+      printLine(node.news,'story');
+      printLine('Hilda hands you a warm loaf.','story');
     } else {
-      print('Hilda smiles and points at the peeling sign. "Have you read the news yet, dear?"','story');
+      printLine('Hilda smiles and points at the peeling sign. "Have you read the news yet, dear?"','story');
     }
     if(!breadEaten){
-      print('Read about your treat: `cat ~/bakery/fresh_bread.txt`','hint');
+      printLine('Read about your treat: `cat ~/bakery/fresh_bread.txt`','hint');
     } else {
-      print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+      printLine('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
     }
     return true;
   }
-  print(node.news,'story');
-  print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+  printLine(node.news,'story');
+  printLine('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
   return true;
 }
 
 function canTakeKey(parts){
   if(parts[parts.length-1]!=='iron_key' || odoOfferedKey) return true;
-  print('"Careful, squire!" Odo says. "Taking my key without asking would be stealing."','story');
+  printLine('"Careful, squire!" Odo says. "Taking my key without asking would be stealing."','story');
   if(!clues.has(1)){
-    print('Odo points at a peeling sign on the wall. "Have you heard the news, squire?"','story');
-    print('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
+    printLine('Odo points at a peeling sign on the wall. "Have you heard the news, squire?"','story');
+    printLine('Read the wanted poster: `cat ~/wanted_poster.txt`','hint');
     return false;
   }
   if(clues.has(3)){
-    print('Tell Odo about the thief: `cat ~/tavern/farmer_odo.txt`','hint');
+    printLine('Tell Odo about the thief: `cat ~/tavern/farmer_odo.txt`','hint');
   } else {
-    print('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
+    printLine('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
   }
   return false;
 }
 
 const CMDS = {
   help(){
-    print(
+    printLine(
 `Here are the magic words you can type. Press Enter after each one.
 
   \`ls\`          LiSt what is in this room (files and doorways)
@@ -350,16 +349,16 @@ Spelling matters, and so do CAPITAL letters. Bakery and bakery are different!`,'
     const target = args.find(a=>!a.startsWith('-'));
     let node = nodeAt(cwd);
     let parts = [...cwd];
-    if(target){ const r=resolve(target); if(pathError(r,target)) return; if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot peek inside.','story'); return; } node=r.node; parts=r.parts; if(node.type==='file'){ print(target,'story'); return; } }
+    if(target){ const r=resolve(target); if(pathError(r,target)) return; if(lockedPath(r.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot peek inside.','story'); return; } node=r.node; parts=r.parts; if(node.type==='file'){ printLine(target,'story'); return; } }
     if(!Terminal.renderListing({out,input,node,parts,getCwd:()=>cwd,all})) return;
     if(!used.has('ls-taught')){
       used.add('ls-taught');
-      print('ls lists what is here: files to read and folders to explore.', 'hint');
+      printLine('ls lists what is here: files to read and folders to explore.', 'hint');
     }
 
     if(node === FS && !clues.has(1)){
       used.add('square-listed');
-      print(
+      printLine(
 `A wanted poster flutters beside a stall.
 Someone needs your help!
 
@@ -367,211 +366,211 @@ Read it: \`cat ${parts.length===cwd.length && parts.every((part,index)=>part===c
         'hint'
       );
     }
-    if(all && parts.join('/')==='stables/hayloft' && !won){ print(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief: \`cat ${cwd.join('/')==='stables/hayloft' ? '.thief' : '~/stables/hayloft/.thief'}\``,'hint'); }
+    if(all && parts.join('/')==='stables/hayloft' && !won){ printLine(`A file named .thief! It was hidden because its name starts with a dot.\nRead it to catch the thief: \`cat ${cwd.join('/')==='stables/hayloft' ? '.thief' : '~/stables/hayloft/.thief'}\``,'hint'); }
   },
   cd(args){
     const arg = args[0];
     if(!arg || arg==='~'){ cwd=[]; enterRoom(); return; }
     const r = resolve(arg);
     if(pathError(r,arg)){ if(r.error==='NOT_FOUND') suggest(arg); return; }
-    if(r.node.type==='file'){ print(`bash: cd: ${arg}: Not a directory\nThat's a scroll, not a room. Read it with \`cat ${arg}\``,'err'); return; }
+    if(r.node.type==='file'){ printLine(`bash: cd: ${arg}: Not a directory\nThat's a scroll, not a room. Read it with \`cat ${arg}\``,'err'); return; }
     if(lockedPath(r.parts) && !tryUnlock()) return;
     cwd = r.parts; enterRoom();
   },
   cat(args){
-    if(!args.length){ print('cat needs to know which scroll to read. Example: `cat welcome.txt`','err'); return; }
+    if(!args.length){ printLine('cat needs to know which scroll to read. Example: `cat welcome.txt`','err'); return; }
     for(const a of args){
       const r = resolve(a);
       if(pathError(r,a)){ if(r.error==='NOT_FOUND') suggest(a); continue; }
-      if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); continue; }
-      if(r.node.type==='dir'){ print(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
+      if(lockedPath(r.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot reach inside.','story'); continue; }
+      if(r.node.type==='dir'){ printLine(`cat: ${a}: Is a directory\nThat's a room, not a scroll. Walk in with \`cd ${a}\``,'err'); continue; }
       if(r.node.clue==='win'){ winGame(); continue; }
       if(pointToPoster(r.node)) continue;
       if(r.node===freshBread && breadOffered){
         if(breadEaten){
-          print('Only a few crumbs remain. That was delicious!','story');
+          printLine('Only a few crumbs remain. That was delicious!','story');
         } else {
           breadEaten = true;
-          print('You bite into the warm bread. CRUNCH! The crust crackles, and the soft middle tastes buttery and delicious.','story');
-          print("With a full tummy, you're ready for adventure!",'story');
+          printLine('You bite into the warm bread. CRUNCH! The crust crackles, and the soft middle tastes buttery and delicious.','story');
+          printLine("With a full tummy, you're ready for adventure!",'story');
         }
-        if(!clues.has(1)) print('Read the news: `cat ~/wanted_poster.txt`','hint');
+        if(!clues.has(1)) printLine('Read the news: `cat ~/wanted_poster.txt`','hint');
         continue;
       }
       if(r.node.clue===5){
         if(!clues.has(3)){
-          print('Farmer Odo waves hello and wipes sweat off his brow.\n"Hot work selling watermelons! What brings you here, squire?"','story');
-          print('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
+          printLine('Farmer Odo waves hello and wipes sweat off his brow.\n"Hot work selling watermelons! What brings you here, squire?"','story');
+          printLine('Find out where the thief went. Ask Bram the blacksmith: `cat ~/blacksmith/smith_bram.txt`','hint');
           continue;
         }
         odoOfferedKey = true;
       }
       if(r.parts[r.parts.length-1]==='iron_key' && !odoOfferedKey){
-        print('A heavy iron key rests on the table. It belongs to Farmer Odo.','story');
-        print('Ask its owner before taking it: `cat ~/tavern/farmer_odo.txt`','hint');
+        printLine('A heavy iron key rests on the table. It belongs to Farmer Odo.','story');
+        printLine('Ask its owner before taking it: `cat ~/tavern/farmer_odo.txt`','hint');
         continue;
       }
-      print(r.node.text,'story');
+      printLine(r.node.text,'story');
             if(r.node === FS.children['welcome.txt']){
         if(!used.has('welcome-read')){
           used.add('welcome-read');
-          print(
-            '\`cat\` shows the words inside a file. Imagine a cat pawing open a scroll!',
+          printLine(
+            '`cat` shows the words inside a file. Imagine a cat pawing open a scroll!',
             'hint'
           );
         }
 
-        print('Find your place on the map: `pwd`', 'hint');
+        printLine('Find your place on the map: `pwd`', 'hint');
       }
-      if(typeof r.node.clue==='number' && !clues.has(r.node.clue)){ clues.add(r.node.clue); updateLog(); print(`✦ Clue found! (${clues.size} of 7)`,'hint'); }
+      if(typeof r.node.clue==='number' && !clues.has(r.node.clue)){ clues.add(r.node.clue); updateLog(); printLine(`✦ Clue found! (${clues.size} of 7)`,'hint'); }
     }
   },
   hint(){
-    if(won){ print('You already caught the thief! Type `restart` to play again.','hint'); return; }
+    if(won){ printLine('You already caught the thief! Type `restart` to play again.','hint'); return; }
     const here = cwd.join('/');
        if(!clues.has(1)){
       if(here !== ''){
-        print('Return to the market square: `cd ~`', 'hint');
+        printLine('Return to the market square: `cd ~`', 'hint');
       } else if(!used.has('welcome-read')){
-        print('Your scroll is waiting. Open it: `cat welcome.txt`', 'hint');
+        printLine('Your scroll is waiting. Open it: `cat welcome.txt`', 'hint');
       } else if(!used.has('pwd-taught')){
-        print('Find your place on the map: `pwd`', 'hint');
+        printLine('Find your place on the map: `pwd`', 'hint');
       } else if(!used.has('square-listed')){
-        print('See what is nearby: `ls`', 'hint');
+        printLine('See what is nearby: `ls`', 'hint');
       } else {
-        print('Find out who needs help: `cat wanted_poster.txt`', 'hint');
+        printLine('Find out who needs help: `cat wanted_poster.txt`', 'hint');
       }
     } else if(!clues.has(2)){
-      if(here==='bakery') print('Hilda the baker sees everyone. Talk to her: type `cat baker_hilda.txt`','hint');
-      else print('The poster said to start at the BAKERY.\nType `cd ~` to go home, then `cd bakery`','hint');
+      if(here==='bakery') printLine('Hilda the baker sees everyone. Talk to her: type `cat baker_hilda.txt`','hint');
+      else printLine('The poster said to start at the BAKERY.\nType `cd ~` to go home, then `cd bakery`','hint');
     } else if(!clues.has(3)){
-      if(here==='blacksmith') print('Ask the blacksmith what he saw: type `cat smith_bram.txt`','hint');
-      else print('Hilda heard the thief run toward the hammering. CLANG! CLANG!\nType `cd ~` then `cd blacksmith`','hint');
+      if(here==='blacksmith') printLine('Ask the blacksmith what he saw: type `cat smith_bram.txt`','hint');
+      else printLine('Hilda heard the thief run toward the hammering. CLANG! CLANG!\nType `cd ~` then `cd blacksmith`','hint');
     } else if(!unlocked){
       const inv = FS.children['inventory'];
       const hasKey = inv && inv.type==='dir' && inv.children['iron_key'];
-      if(hasKey) print('You have the key in your bag! Open the barn: type `cd ~/stables`','hint');
+      if(hasKey) printLine('You have the key in your bag! Open the barn: type `cd ~/stables`','hint');
       else if(clues.has(5)){
-        if(!inv || inv.type!=='dir') print('Farmer Odo told you the plan! First make your bag:\ntype `mkdir ~/inventory`','hint');
+        if(!inv || inv.type!=='dir') printLine('Farmer Odo told you the plan! First make your bag:\ntype `mkdir ~/inventory`','hint');
         else {
           const kp = findKey();
-          if(kp && kp.length===1) print('The iron key is lying at home in the square! Put it in your bag:\ntype `cd ~` then `mv iron_key ~/inventory`','hint');
-          else if(kp) print(`The iron key is in the ${kp.slice(0,-1).join('/')}. Go there, then type:\n\`mv iron_key ~/inventory\``,'hint');
-          else print('Pick up the key at the tavern: type `cd ~/tavern` then `mv iron_key ~/inventory`','hint');
+          if(kp && kp.length===1) printLine('The iron key is lying at home in the square! Put it in your bag:\ntype `cd ~` then `mv iron_key ~/inventory`','hint');
+          else if(kp) printLine(`The iron key is in the ${kp.slice(0,-1).join('/')}. Go there, then type:\n\`mv iron_key ~/inventory\``,'hint');
+          else printLine('Pick up the key at the tavern: type `cd ~/tavern` then `mv iron_key ~/inventory`','hint');
         }
       }
       else if(clues.has(4)){
-        if(here==='tavern') print('Farmer Odo is in the corner booth. Talk to him: type `cat farmer_odo.txt`','hint');
-        else print('Farmer Odo is taking a break at the TAVERN.\nType `cd ~` then `cd tavern`','hint');
+        if(here==='tavern') printLine('Farmer Odo is in the corner booth. Talk to him: type `cat farmer_odo.txt`','hint');
+        else printLine('Farmer Odo is taking a break at the TAVERN.\nType `cd ~` then `cd tavern`','hint');
       }
       else if(sawLocked){
-        if(here==='fruit_stall') print('Ask the farmhand where Odo went: type `cat farmhand_tilly.txt`','hint');
-        else print('The sign said Farmer Odo went to the FRUIT STALL.\nType `cd ~` then `cd fruit_stall`','hint');
+        if(here==='fruit_stall') printLine('Ask the farmhand where Odo went: type `cat farmhand_tilly.txt`','hint');
+        else printLine('The sign said Farmer Odo went to the FRUIT STALL.\nType `cd ~` then `cd fruit_stall`','hint');
       }
-      else print('Bram saw the thief run toward the horses.\nType `cd ~` then `cd stables`','hint');
+      else printLine('Bram saw the thief run toward the horses.\nType `cd ~` then `cd stables`','hint');
     } else if(!clues.has(6)){
-      if(here==='stables') print('The stablehand looks worried. Ask him: type `cat stablehand_pip.txt`','hint');
-      else print('Back to the barn! Type `cd ~/stables`','hint');
+      if(here==='stables') printLine('The stablehand looks worried. Ask him: type `cat stablehand_pip.txt`','hint');
+      else printLine('Back to the barn! Type `cd ~/stables`','hint');
     } else if(!clues.has(7)){
-      if(here==='stables/hayloft') print('Take a close look at the hay: type `cat hay.txt`','hint');
-      else if(here==='stables') print('The horses keep looking UP. Climb up: type `cd hayloft`','hint');
-      else print('Someone is hiding above the stables!\nType `cd ~/stables` then `cd hayloft`','hint');
+      if(here==='stables/hayloft') printLine('Take a close look at the hay: type `cat hay.txt`','hint');
+      else if(here==='stables') printLine('The horses keep looking UP. Climb up: type `cd hayloft`','hint');
+      else printLine('Someone is hiding above the stables!\nType `cd ~/stables` then `cd hayloft`','hint');
     } else {
-      if(here==='stables/hayloft') print('Hidden files start with a dot, and plain `ls` will not show them.\nType `ls -a` to see EVERYTHING, then read what you find with `cat`','hint');
-      else print('Hurry back to the hayloft! Type `cd ~/stables/hayloft`\nThen type `ls -a` to find what is hiding.','hint');
+      if(here==='stables/hayloft') printLine('Hidden files start with a dot, and plain `ls` will not show them.\nType `ls -a` to see EVERYTHING, then read what you find with `cat`','hint');
+      else printLine('Hurry back to the hayloft! Type `cd ~/stables/hayloft`\nThen type `ls -a` to find what is hiding.','hint');
     }
   },
   mkdir(args){
-    if(!args.length){ print('mkdir needs a name for the new directory.\nExample: `mkdir ~/inventory` makes a bag at home called inventory.','err'); return; }
+    if(!args.length){ printLine('mkdir needs a name for the new directory.\nExample: `mkdir ~/inventory` makes a bag at home called inventory.','err'); return; }
     for(const a of args){
       if(a.startsWith('-')) continue;
       const r = resolve(a,{allowMissing:true});
       if(pathError(r,a)) continue;
-      if(lockedPath(r.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot build in there.','story'); continue; }
-      if(r.node){ print(`mkdir: cannot create directory '${a}': File exists`,'err'); continue; }
+      if(lockedPath(r.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot build in there.','story'); continue; }
+      if(r.node){ printLine(`mkdir: cannot create directory '${a}': File exists`,'err'); continue; }
       const name = r.parts[r.parts.length-1];
       const parent = nodeAt(r.parts.slice(0,-1));
-      if(!parent || parent.type!=='dir'){ print(`mkdir: cannot create directory '${a}': No such file or directory`,'err'); continue; }
+      if(!parent || parent.type!=='dir'){ printLine(`mkdir: cannot create directory '${a}': No such file or directory`,'err'); continue; }
       parent.children[name] = D({});
       if(name==='inventory' && r.parts.length===1){
-        print(`You stitch together a sturdy leather INVENTORY bag and hang it
+        printLine(`You stitch together a sturdy leather INVENTORY bag and hang it
 from your belt. (You just made a brand-new directory at home!)`,'story');
-        print('Now you can `mv` things into it, like this: `mv iron_key ~/inventory`','hint');
+        printLine('Now you can `mv` things into it, like this: `mv iron_key ~/inventory`','hint');
       } else {
-        print(`You build a brand-new directory called ${name}. (mkdir = MaKe DIRectory)`,'story');
+        printLine(`You build a brand-new directory called ${name}. (mkdir = MaKe DIRectory)`,'story');
         if(name==='inventory'){
-          print(
+          printLine(
 `Uh oh! In this adventure, an inventory folder here stays here.
 Only the bag at home, \`~/inventory\`, travels with you.
 The ~ means home, so it works wherever you are.`,
             'hint');
           const homeBag = FS.children['inventory'];
           if(!homeBag){
-            print("Let's make your travelling bag at home instead: `mkdir ~/inventory`",'hint');
+            printLine("Let's make your travelling bag at home instead: `mkdir ~/inventory`",'hint');
           } else if(homeBag.type==='dir'){
-            print('Your travelling bag is already at home! Peek inside: `ls ~/inventory`','hint');
+            printLine('Your travelling bag is already at home! Peek inside: `ls ~/inventory`','hint');
           } else {
-            print('There is a file called inventory at home, but a bag must be a directory. Move that file into another directory first, then make your bag: `mkdir ~/inventory`','hint');
+            printLine('There is a file called inventory at home, but a bag must be a directory. Move that file into another directory first, then make your bag: `mkdir ~/inventory`','hint');
           }
         }
       }
     }
   },
   mv(args){
-    if(args.length<2){ print('mv needs two parts: the thing to move, then where it goes.\nExample: `mv iron_key ~/inventory`','err'); return; }
+    if(args.length<2){ printLine('mv needs two parts: the thing to move, then where it goes.\nExample: `mv iron_key ~/inventory`','err'); return; }
     const src = resolve(args[0]);
     if(pathError(src,args[0])) return;
-    if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
-    if(src.node.type==='dir'){ print(`mv: '${args[0]}' is a whole room! A squire can only carry files, not rooms.`,'err'); return; }
+    if(lockedPath(src.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot reach inside.','story'); return; }
+    if(src.node.type==='dir'){ printLine(`mv: '${args[0]}' is a whole room! A squire can only carry files, not rooms.`,'err'); return; }
     if(!canTakeKey(src.parts)) return;
     const dst = resolve(args[1]);
     if(pathError(dst,args[1])) return;
-    if(lockedPath(dst.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot put things inside.','story'); return; }
-    if(dst.node.type!=='dir'){ print(`mv: '${args[1]}' is a file, not a directory.\nYou can only put things INSIDE a directory (a room or a bag).`,'err'); return; }
+    if(lockedPath(dst.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot put things inside.','story'); return; }
+    if(dst.node.type!=='dir'){ printLine(`mv: '${args[1]}' is a file, not a directory.\nYou can only put things INSIDE a directory (a room or a bag).`,'err'); return; }
     const name = src.parts[src.parts.length-1];
     const parent = nodeAt(src.parts.slice(0,-1));
     delete parent.children[name];
     dst.node.children[name] = src.node;
-    print(`You pick up ${name} and tuck it into ${args[1].replace(/\/+$/,'')}.`,'story');
+    printLine(`You pick up ${name} and tuck it into ${args[1].replace(/\/+$/,'')}.`,'story');
     if(name==='iron_key' && dst.parts.length===1 && dst.parts[0]==='inventory'){
-      print('The IRON KEY jingles safely in your bag. To the barn! Type `cd ~/stables`','hint');
+      printLine('The IRON KEY jingles safely in your bag. To the barn! Type `cd ~/stables`','hint');
     } else if(name==='iron_key' && dst.parts[dst.parts.length-1]==='inventory'){
-      print('Uh oh! That inventory folder stays here. Your travelling bag belongs at home, at ~/inventory.','hint');
-      if(!FS.children['inventory']) print('Make your travelling bag first: `mkdir ~/inventory`','hint');
-      print(`Then move the key into your travelling bag: \`mv ${pathStr(dst.parts)}/iron_key ~/inventory\``,'hint');
+      printLine('Uh oh! That inventory folder stays here. Your travelling bag belongs at home, at ~/inventory.','hint');
+      if(!FS.children['inventory']) printLine('Make your travelling bag first: `mkdir ~/inventory`','hint');
+      printLine(`Then move the key into your travelling bag: \`mv ${pathStr(dst.parts)}/iron_key ~/inventory\``,'hint');
     }
   },
   cp(args){
-    if(args.length<2){ print('cp needs two parts: the thing to copy, then where the copy goes.\nExample: `cp apples.txt ~/inventory`','err'); return; }
+    if(args.length<2){ printLine('cp needs two parts: the thing to copy, then where the copy goes.\nExample: `cp apples.txt ~/inventory`','err'); return; }
     const src = resolve(args[0]);
     if(pathError(src,args[0])) return;
-    if(lockedPath(src.parts)){ sawLocked=true; print('The barn doors are locked tight. You cannot reach inside.','story'); return; }
-    if(src.node.type==='dir'){ print(`cp: '${args[0]}' is a directory. In this game you can only copy files.`,'err'); return; }
+    if(lockedPath(src.parts)){ sawLocked=true; printLine('The barn doors are locked tight. You cannot reach inside.','story'); return; }
+    if(src.node.type==='dir'){ printLine(`cp: '${args[0]}' is a directory. In this game you can only copy files.`,'err'); return; }
     if(!canTakeKey(src.parts)) return;
     const dst = resolve(args[1]);
     if(pathError(dst,args[1])) return;
-    if(dst.node.type!=='dir' || lockedPath(dst.parts)){ print(`cp: cannot copy to '${args[1]}': No such directory`,'err'); return; }
+    if(dst.node.type!=='dir' || lockedPath(dst.parts)){ printLine(`cp: cannot copy to '${args[1]}': No such directory`,'err'); return; }
     const name = src.parts[src.parts.length-1];
     dst.node.children[name] = {type:'file', text:src.node.text, news:src.node.news};
-    print(`You make a perfect copy of ${name}. Now there are two! (Bonus command: cp means CoPy.)`,'story');
+    printLine(`You make a perfect copy of ${name}. Now there are two! (Bonus command: cp means CoPy.)`,'story');
   },
   touch(args){
-    if(!args.length){ print('touch needs a name. Example: `touch note.txt` makes a new empty scroll.','err'); return; }
+    if(!args.length){ printLine('touch needs a name. Example: `touch note.txt` makes a new empty scroll.','err'); return; }
     for(const a of args){
       const r = resolve(a,{allowMissing:true});
       if(pathError(r,a)) continue;
-      if(lockedPath(r.parts)){ print(`touch: cannot touch '${a}'`,'err'); continue; }
+      if(lockedPath(r.parts)){ printLine(`touch: cannot touch '${a}'`,'err'); continue; }
       if(r.node) continue; // real touch just updates the time — nothing to show here
       const parent = nodeAt(r.parts.slice(0,-1));
-      if(!parent || parent.type!=='dir'){ print(`touch: cannot touch '${a}': No such file or directory`,'err'); continue; }
+      if(!parent || parent.type!=='dir'){ printLine(`touch: cannot touch '${a}': No such file or directory`,'err'); continue; }
       parent.children[r.parts[r.parts.length-1]] = F('(a blank scroll — you made it yourself with touch!)');
-      print(`You unroll a fresh blank scroll called ${r.parts[r.parts.length-1]}. (Bonus command: touch makes new empty files.)`,'story');
+      printLine(`You unroll a fresh blank scroll called ${r.parts[r.parts.length-1]}. (Bonus command: touch makes new empty files.)`,'story');
     }
   },
-  rm(){ print('Whoa there, squire! rm REMOVES things FOREVER — far too dangerous\nfor today\'s quest. Nothing in this market may be destroyed.\n(In a real terminal, be VERY careful with rm.)','hint'); },
+  rm(){ printLine('Whoa there, squire! rm REMOVES things FOREVER — far too dangerous\nfor today\'s quest. Nothing in this market may be destroyed.\n(In a real terminal, be VERY careful with rm.)','hint'); },
   pwd(){
     const firstUse = !used.has('pwd-taught');
-    print(
+    printLine(
 `The map shows your current location:
 
 /home/squire/market${cwd.length ? '/' + cwd.join('/') : ''}`,
@@ -580,14 +579,14 @@ The ~ means home, so it works wherever you are.`,
 
     if(firstUse){
       used.add('pwd-taught');
-      print(
+      printLine(
 `In Linux, a location is called a DIRECTORY or FOLDER, which can hold other locations or things to interact with. You can use \`pwd\` to check your map.`,
         'story'
       );
     }
 
     if(firstUse || (cwd.length === 0 && !clues.has(1))){
-      print(
+      printLine(
 `What is nearby? Look around: \`ls\`. (That's a little L and a little S.)`,
         'story'
       );
@@ -595,9 +594,9 @@ The ~ means home, so it works wherever you are.`,
   },
   clear(){ out.innerHTML=''; },
   restart(){ location.reload(); },
-  whoami(){ print('squire','story'); print('(Bonus command! whoami tells you your user name.)','hint'); },
-  sudo(){ print('Nice try! sudo means "do this as the boss." Even squires must ask the King first.','hint'); },
-  exit(){ print('A true squire never quits a quest! (In a real terminal, exit closes the window.)','hint'); }
+  whoami(){ printLine('squire','story'); printLine('(Bonus command! whoami tells you your user name.)','hint'); },
+  sudo(){ printLine('Nice try! sudo means "do this as the boss." Even squires must ask the King first.','hint'); },
+  exit(){ printLine('A true squire never quits a quest! (In a real terminal, exit closes the window.)','hint'); }
 };
 
 function suggest(arg){
@@ -605,19 +604,19 @@ function suggest(arg){
   const names = Object.keys(node.children).filter(n=>!n.startsWith('.'));
   const low = arg.toLowerCase().replace(/\/$/,'');
   const hit = names.find(n=>n.toLowerCase()===low) || names.find(n=>n.toLowerCase().startsWith(low.slice(0,3)));
-  if(hit) print(`Did you mean ${hit}? Check the spelling and the capital letters. Type \`ls\` to see what's here.`,'hint');
-  else print('Type `ls` to see what is in this room.','hint');
+  if(hit) printLine(`Did you mean ${hit}? Check the spelling and the capital letters. Type \`ls\` to see what's here.`,'hint');
+  else printLine('Type `ls` to see what is in this room.','hint');
 }
 
 function winGame(){
   if(won){
-    print('You already caught the thief and earned your sword! Check your bag: `ls ~/inventory`','hint');
+    printLine('You already caught the thief and earned your sword! Check your bag: `ls ~/inventory`','hint');
     return;
   }
   if(!FS.children['inventory']) FS.children['inventory'] = D({});
   const inventory = FS.children['inventory'];
   if(inventory.type!=='dir'){
-    print('Your reward needs an inventory bag, but ~/inventory is a file. Move it into another directory with `mv inventory bakery`, then try reading the thief file again.','err');
+    printLine('Your reward needs an inventory bag, but ~/inventory is a file. Move it into another directory with `mv inventory bakery`, then try reading the thief file again.','err');
     return;
   }
   inventory.children['knights_sword'] = F(
@@ -625,7 +624,7 @@ function winGame(){
 Its polished blade gleams, and your name is engraved on the hilt.
 A reminder to be brave, kind, and protect those who need your help.`);
   won = true;
-  print(
+  printLine(
 `You pull back the hay...
 
 There, curled up with a loaf of bread, is a skinny kid in a GREEN HOOD, holding the King's SILVER GOBLET!
@@ -633,14 +632,14 @@ There, curled up with a loaf of bread, is a skinny kid in a GREEN HOOD, holding 
 "Aw, rats," says Wren the Pickpocket. "Nobody EVER finds the hidden files."
 
 Wren hands back the goblet and promises to work at the bakery to pay Hilda back for the bread.`,'story');
-  print('★  QUEST COMPLETE!  You caught the Market Thief!  ★','win');
-  print(
+  printLine('★  QUEST COMPLETE!  You caught the Market Thief!  ★','win');
+  printLine(
 `The King smiles. "A promise is a promise, brave squire!"
 He presents you with a real KNIGHT'S SWORD.
 You tuck your reward safely into your inventory bag.`,
     'story');
-  print('See your reward: `ls ~/inventory`\nTake a closer look: `cat ~/inventory/knights_sword`','hint');
-  print(
+  printLine('See your reward: `ls ~/inventory`\nTake a closer look: `cat ~/inventory/knights_sword`','hint');
+  printLine(
 `You used real Linux commands to solve this quest:
   ls, ls -a, cd, cat, pwd, mkdir, and mv.
 They work the exact same way in a real terminal.
@@ -668,10 +667,10 @@ document.getElementById('f').addEventListener('submit', e=>{
   commandHistory.add(line);
   const [c, ...args] = line.split(/\s+/);
   if(CMDS[c]){ used.add(c); CMDS[c](args); updateLog(); }
-  else if(c==='cd..' || c==='cd~'){ print(`Almost! Put a space after cd, like this: \`${c.slice(0,2)} ${c.slice(2)}\``,'hint'); }
-  else if(c==='ls-a' || c==='ls-la' || c==='ls-al'){ print('Almost! Put a space after ls, like this: `ls -a`','hint'); }
-  else if(CMDS[c.toLowerCase()]) print(`bash: ${c}: command not found\nCommands are lowercase. Try \`${c.toLowerCase()}\``,'err');
-  else print(`bash: ${c}: command not found\nType \`help\` to see the commands you can use.`,'err');
+  else if(c==='cd..' || c==='cd~'){ printLine(`Almost! Put a space after cd, like this: \`${c.slice(0,2)} ${c.slice(2)}\``,'hint'); }
+  else if(c==='ls-a' || c==='ls-la' || c==='ls-al'){ printLine('Almost! Put a space after ls, like this: `ls -a`','hint'); }
+  else if(CMDS[c.toLowerCase()]) printLine(`bash: ${c}: command not found\nCommands are lowercase. Try \`${c.toLowerCase()}\``,'err');
+  else printLine(`bash: ${c}: command not found\nType \`help\` to see the commands you can use.`,'err');
   out.scrollTop = out.scrollHeight;
 });
 
@@ -695,9 +694,9 @@ Terminal.bindControls({
 document.getElementById('frame').addEventListener('click', ()=>{ if(!window.getSelection().toString()) input.focus(); });
 
 // ---------- Start ----------
-print('⚔  THE MARKET THIEF  ⚔', 'title');
+printLine('⚔  THE MARKET THIEF  ⚔', 'title');
 
-print(
+printLine(
 `Welcome to LINUX, a thriving realm of bustling markets, secret passages, and adventures waiting around every corner.
 
 You are a SQUIRE: a young adventurer training to become a knight.
@@ -707,7 +706,7 @@ Today, your adventure begins in the market square.
 A sealed scroll waits at your feet. Your name is on it!`,
 'story');
 
-print(
+printLine(
 `Open the scroll: \`cat welcome.txt\`
 Type it below, then press Enter.
 

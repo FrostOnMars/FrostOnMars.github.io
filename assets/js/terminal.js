@@ -1,3 +1,4 @@
+/* exported Terminal */
 const Terminal = (() => {
   function pathStr(parts){
     return parts.length ? '~/' + parts.join('/') : '~';

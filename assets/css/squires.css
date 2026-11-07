@@ -1,5 +1,6 @@
 :root {
   color-scheme: dark;
+
   --oak: #1b1410;
   --screen: #120f0c;
   --panel: var(--screen);
@@ -32,7 +33,7 @@ h1 {
 
 code {
   color: var(--amber);
-  background: rgba(242, 181, 68, .1);
+  background: rgb(242 181 68 / 10%);
   padding: 0 4px;
   border-radius: 3px;
   font-family: var(--mono);
@@ -52,6 +53,7 @@ code {
 .quest-board h1 { font-size: clamp(2rem, 7vw, 3.2rem); margin-bottom: 4px; letter-spacing: .02em; text-wrap: balance; }
 .tagline { color: var(--dim); font-size: clamp(.85rem, 2.6vw, 1rem); margin: 0 0 6px; }
 .tagline b { color: var(--ink); }
+
 .rule {
   width: min(420px, 80%);
   height: 1px;
@@ -60,6 +62,7 @@ code {
   background: linear-gradient(90deg, transparent, var(--amber), transparent);
 }
 .quest-board main { width: 100%; max-width: 46rem; }
+
 .quest-board h2 {
   font-family: var(--display);
   font-weight: 400;
@@ -69,6 +72,7 @@ code {
   text-align: center;
 }
 .board { display: flex; flex-direction: column; gap: 16px; }
+
 .quest {
   display: block;
   text-decoration: none;
@@ -77,13 +81,13 @@ code {
   border: 1px solid var(--edge);
   border-radius: 8px;
   padding: 18px 20px;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, .5);
+  box-shadow: inset 0 0 30px rgb(0 0 0 / 50%);
   transition: border-color .15s ease, transform .15s ease;
 }
 a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: translateY(-2px); }
 .quest-top { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .quest h3 { font-family: var(--display); font-weight: 400; color: var(--amber); font-size: clamp(1.3rem, 5vw, 1.7rem); margin: 0; }
-.badge { font-size: .72rem; color: var(--amber); border: 1px solid var(--edge); border-radius: 4px; padding: 3px 9px; background: rgba(242, 181, 68, .08); white-space: nowrap; }
+.badge { font-size: .72rem; color: var(--amber); border: 1px solid var(--edge); border-radius: 4px; padding: 3px 9px; background: rgb(242 181 68 / 8%); white-space: nowrap; }
 .quest p { margin: 10px 0 0; font-size: clamp(.85rem, 2.6vw, .95rem); }
 .quest .teaches { margin-top: 10px; font-size: .78rem; color: var(--dim); }
 .quest-board code { padding: 0 5px; font-size: .92em; }
@@ -141,12 +145,14 @@ a.quest:hover, a.quest:focus-visible { border-color: var(--amber); transform: tr
 html:has(.market-adventure) {
   height: 100%;
   box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  scroll-padding-top: env(safe-area-inset-top, 0px);
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  scroll-padding-top: env(safe-area-inset-top, 0);
 }
+
 .market-adventure {
   --mono: "JetBrains Mono", ui-monospace, "DejaVu Sans Mono", Menlo, Consolas, monospace;
+
   box-sizing: border-box;
   padding-block: 12px;
 }
@@ -157,13 +163,14 @@ html:has(.market-adventure) {
 .pips { display: inline-flex; gap: 3px; vertical-align: middle; margin-left: 4px; }
 .pips i { width: 9px; height: 9px; border: 1px solid var(--amber); transform: rotate(45deg); display: inline-block; }
 .pips i.on { background: var(--amber); }
-.market-adventure .frame { box-shadow: inset 0 0 40px rgba(0, 0, 0, .6); }
+.market-adventure .frame { box-shadow: inset 0 0 40px rgb(0 0 0 / 60%); }
 .market-adventure #out { padding: 14px 14px 4px; }
 .market-adventure #out > div { margin: 0 0 6px; }
 .market-adventure #out > div:first-child { margin-top: 0; }
 #out > div.story { margin-bottom: 1lh; }
 .cmd { color: var(--ink); margin-top: 16px; }
 .cmd .p { color: var(--amber); }
+
 .muted-command-echoes #out > :is(.echo, .cmd) {
   color: var(--dim);
   margin-top: 16px;
@@ -174,12 +181,13 @@ html:has(.market-adventure) {
 .title { font-family: var(--display); color: var(--amber); font-size: 1.3em; }
 .market-adventure .win { font-weight: 600; }
 .market-adventure .keys { padding: 8px 14px 0; }
-.market-adventure .keys button { font-family: var(--mono); font-size: .8rem; background: rgba(242, 181, 68, .08); min-height: 34px; -webkit-tap-highlight-color: transparent; }
-.market-adventure .keys button:active { background: rgba(242, 181, 68, .25); }
+.market-adventure .keys button { font-family: var(--mono); font-size: .8rem; background: rgb(242 181 68 / 8%); min-height: 34px; -webkit-tap-highlight-color: transparent; }
+.market-adventure .keys button:active { background: rgb(242 181 68 / 25%); }
 .market-adventure #prompt { white-space: nowrap; overflow-wrap: normal; font-size: clamp(.82rem, 2.6vw, .95rem); }
 .market-adventure #cmd { outline: none; caret-color: var(--amber); }
-.market-adventure form:focus-within { background: rgba(242, 181, 68, .04); }
+.market-adventure form:focus-within { background: rgb(242 181 68 / 4%); }
 .file-list { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 24px; }
+
 .file-list .file-link {
   background: none;
   border: 0;
@@ -193,14 +201,16 @@ html:has(.market-adventure) {
 .file-list .file-link:focus-visible { outline: 2px solid var(--amber); outline-offset: 3px; }
 .file-list .dir { font-weight: 600; }
 
-@media (min-width: 64rem) {
+@media (width >= 64rem) {
   .adventure { width: 76%; max-width: 90ch; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .quest { transition: none; }
 }
+
 @media (prefers-reduced-motion: no-preference) {
   .market-adventure #out > div.new { animation: in .25s ease-out; }
+
   @keyframes in { from { opacity: .3; } to { opacity: 1; } }
 }
