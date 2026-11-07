@@ -51,7 +51,7 @@ GitHub Pages serves the files as they are.
 - **Performance.** WebP images with explicit dimensions, and lazy loading
   for anything below the fold.
 - **Progressive enhancement.** The theme follows your system setting even
-  without JavaScript; the toggle only appears when JavaScript is available
+  without JavaScript. The toggle only appears when JavaScript is available
   to run it.
 - **Code quality.** Prettier, ESLint, and Stylelint, checked by GitHub
   Actions on every push.
@@ -77,17 +77,4 @@ GitHub Pages serves the files as they are.
 │   │   └── *.js                One script per quest
 │   └── images/
 └── tests/                      Manual test page for game conversations
-```
-
-## Running it locally
-
-Open any `.html` file in a browser. That's all you need.
-
-To use the code-quality tools, install [Node.js](https://nodejs.org/) (the
-version is in [`.nvmrc`](.nvmrc)) and run:
-
-```sh
-npm install
-npm run lint     # check formatting, JavaScript, and CSS
-npm run format   # apply Prettier formatting
 ```
